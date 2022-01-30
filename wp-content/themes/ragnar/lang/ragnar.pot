@@ -1,0 +1,896 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-24 08:03+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: category_default.php:33 category_default.php:85 category_default.php:119 
+#: category_default.php:140 category_default.php:163 category_default.php:195 
+#: category_default.php:216 category_grid_latest.php:90 
+#: category_grid_latest.php:138 category_grid_popular.php:98 
+#: category_grid_popular.php:146 single.php:47 single.php:206 single.php:208 
+#: includes/boxes/contentBlog.php:78 includes/boxes/contentBlog.php:82 
+#: includes/boxes/loopBlogGrid.php:7 includes/boxes/topBlog.php:10 
+#: includes/widgets/popular_post_widget.php:55 
+#: includes/widgets/popular_post_widget.php:59 
+#: includes/widgets/post_slider_widget.php:76 
+#: includes/widgets/post_slider_widget.php:80 
+#: includes/widgets/post_widget.php:83 includes/widgets/post_widget.php:101 
+#: includes/widgets/post_widget.php:111 includes/widgets/post_widget.php:127 
+#: includes/widgets/post_widget.php:131 
+#: includes/widgets/recent_post_widget.php:52 
+#: includes/widgets/recent_post_widget.php:56 
+#: includes/widgets/video_widget.php:46
+msgid "Permanent Link to"
+msgstr ""
+
+#: category_default.php:41 category_default.php:93 category_default.php:127 
+#: category_default.php:171 category_default.php:203 single.php:55 
+#: includes/boxes/loopBlogGrid.php:15
+msgid "by "
+msgstr ""
+
+#: category_grid.php:8
+msgid "Recent posts"
+msgstr ""
+
+#: category_grid.php:9
+msgid "Popular posts"
+msgstr ""
+
+#: category_grid.php:23
+msgid "Load more posts"
+msgstr ""
+
+#: comments.php:42
+msgid "Cancel Reply"
+msgstr ""
+
+#: comments.php:43
+msgid "Leave a Reply to"
+msgstr ""
+
+#: comments.php:44
+msgid "Leave a Comment"
+msgstr ""
+
+#: comments.php:45
+msgid "Website"
+msgstr ""
+
+#: comments.php:46
+msgid "required"
+msgstr ""
+
+#: comments.php:47
+msgid "Mail"
+msgstr ""
+
+#: comments.php:48
+msgid "Name"
+msgstr ""
+
+#: comments.php:49
+msgid "Comments are closed."
+msgstr ""
+
+#: comments.php:99
+msgid ""
+"Logged in as <a href=\"%s\">%s</a>. <a title=\"Log out of this account\" "
+"href=\"%s\">Log out?</a>\n"
+msgstr ""
+
+#: functions.php:23
+msgid "Main Menu"
+msgstr ""
+
+#: functions.php:24
+msgid "Responsive Menu"
+msgstr ""
+
+#: functions.php:25
+msgid "Scroll Menu"
+msgstr ""
+
+#: functions.php:33
+msgid "Sidebar main"
+msgstr ""
+
+#: functions.php:34
+msgid "Main sidebar for blog and posts."
+msgstr ""
+
+#: functions.php:44
+msgid "Top sidebar left"
+msgstr ""
+
+#: functions.php:45
+msgid "Left sidebar for top bar."
+msgstr ""
+
+#: functions.php:54
+msgid "Top sidebar right"
+msgstr ""
+
+#: functions.php:55
+msgid "Right sidebar for top bar."
+msgstr ""
+
+#: functions.php:65
+msgid "Sidebar for advert in logo area"
+msgstr ""
+
+#: functions.php:66
+msgid "If you wish to add advert to header use this sidebar."
+msgstr ""
+
+#: functions.php:75
+msgid "Sidebar under header left"
+msgstr ""
+
+#: functions.php:76
+msgid "Custom sidebar under header on left position."
+msgstr ""
+
+#: functions.php:85
+msgid "Sidebar under header right"
+msgstr ""
+
+#: functions.php:86
+msgid "Custom sidebar under header on right position."
+msgstr ""
+
+#: functions.php:95
+msgid "Sidebar under header full width"
+msgstr ""
+
+#: functions.php:96
+msgid ""
+"Custom sidebar under header (below left and right sidebar) fullwidth "
+"position."
+msgstr ""
+
+#: functions.php:106
+msgid "Sidebar above footer full width"
+msgstr ""
+
+#: functions.php:107
+msgid "Custom sidebar above footer fullwidth position."
+msgstr ""
+
+#: functions.php:116
+msgid "Sidebar above footer left"
+msgstr ""
+
+#: functions.php:117
+msgid "Custom sidebar above footer left position."
+msgstr ""
+
+#: functions.php:126
+msgid "Sidebar above footer right"
+msgstr ""
+
+#: functions.php:127
+msgid "Custom sidebar above footer right position."
+msgstr ""
+
+#: functions.php:137
+msgid "Footer sidebar 1"
+msgstr ""
+
+#: functions.php:138
+msgid "Footer sidebar first position"
+msgstr ""
+
+#: functions.php:147
+msgid "Footer sidebar 2"
+msgstr ""
+
+#: functions.php:148
+msgid "Footer sidebar secund position"
+msgstr ""
+
+#: functions.php:158
+msgid "Footer sidebar 3"
+msgstr ""
+
+#: functions.php:159
+msgid "Footer sidebar third position"
+msgstr ""
+
+#: functions.php:406 functions.php:439
+msgid "Home"
+msgstr ""
+
+#: functions.php:428
+msgid "Search results for "
+msgstr ""
+
+#: functions.php:436
+msgid "Archive"
+msgstr ""
+
+#: functions.php:510
+msgid "Ragnar options"
+msgstr ""
+
+#: functions.php:543
+msgid "Video URL(*required) - add if you select video post:"
+msgstr ""
+
+#: functions.php:546
+msgid "Link URL - add if you select link post : "
+msgstr ""
+
+#: functions.php:549
+msgid ""
+"Audio URL - add if you select audio post (audio from SoundCloud -- https:"
+"//soundcloud.com/ )<br>You also need to install plugin SoundCloud Shortcode "
+"(https://wordpress.org/plugins/soundcloud-shortcode):"
+msgstr ""
+
+#: functions.php:552
+msgid "No options for this post type."
+msgstr ""
+
+#: functions.php:670 functions.php:677
+msgid "Search and hit enter..."
+msgstr ""
+
+#: functions.php:717
+msgid "Ragnar Options"
+msgstr ""
+
+#: functions.php:744
+msgid "Select custom revolution slider:"
+msgstr ""
+
+#: functions.php:748
+msgid "Empty"
+msgstr ""
+
+#: functions.php:803
+msgid "Continue reading"
+msgstr ""
+
+#: functions.php:981
+msgid "Revolution Slider"
+msgstr ""
+
+#: functions.php:991
+msgid "Shortcode Ultimate"
+msgstr ""
+
+#: functions.php:996
+msgid "Contact Form 7"
+msgstr ""
+
+#: functions.php:1001
+msgid "Facebook Page Like Widget"
+msgstr ""
+
+#: functions.php:1006
+msgid "Recent tweets widget"
+msgstr ""
+
+#: functions.php:1011
+msgid "MailPoet Newsletters"
+msgstr ""
+
+#: functions.php:1016
+msgid "Instagram Feed"
+msgstr ""
+
+#: functions.php:1021
+msgid "SoundCloud Shortcode"
+msgstr ""
+
+#: functions.php:1041
+msgid "Install Required Plugins"
+msgstr ""
+
+#: functions.php:1042
+msgid "Install Plugins"
+msgstr ""
+
+#: functions.php:1043
+msgid "Installing Plugin: %s"
+msgstr ""
+
+#: functions.php:1044
+msgid "Something went wrong with the plugin API."
+msgstr ""
+
+#: functions.php:1045
+msgid "This theme requires the following plugin: %1$s."
+msgid_plural "This theme requires the following plugins: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1046
+msgid "This theme recommends the following plugin: %1$s."
+msgid_plural "This theme recommends the following plugins: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1047
+msgid ""
+"Sorry, but you do not have the correct permissions to install the %s plugin. "
+"Contact the administrator of this site for help on getting the plugin "
+"installed."
+msgid_plural ""
+"Sorry, but you do not have the correct permissions to install the %s plugins."
+" Contact the administrator of this site for help on getting the plugins "
+"installed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1048
+msgid "The following required plugin is currently inactive: %1$s."
+msgid_plural "The following required plugins are currently inactive: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1049
+msgid "The following recommended plugin is currently inactive: %1$s."
+msgid_plural "The following recommended plugins are currently inactive: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1050
+msgid ""
+"Sorry, but you do not have the correct permissions to activate the %s plugin."
+" Contact the administrator of this site for help on getting the plugin "
+"activated."
+msgid_plural ""
+"Sorry, but you do not have the correct permissions to activate the %s "
+"plugins. Contact the administrator of this site for help on getting the "
+"plugins activated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1051
+msgid ""
+"The following plugin needs to be updated to its latest version to ensure "
+"maximum compatibility with this theme: %1$s."
+msgid_plural ""
+"The following plugins need to be updated to their latest version to ensure "
+"maximum compatibility with this theme: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1052
+msgid ""
+"Sorry, but you do not have the correct permissions to update the %s plugin. "
+"Contact the administrator of this site for help on getting the plugin "
+"updated."
+msgid_plural ""
+"Sorry, but you do not have the correct permissions to update the %s plugins. "
+"Contact the administrator of this site for help on getting the plugins "
+"updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1053
+msgid "Begin installing plugin"
+msgid_plural "Begin installing plugins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1054
+msgid "Begin activating plugin"
+msgid_plural "Begin activating plugins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions.php:1055
+msgid "Return to Required Plugins Installer"
+msgstr ""
+
+#: functions.php:1056
+msgid "Plugin activated successfully."
+msgstr ""
+
+#: functions.php:1057
+msgid "All plugins installed and activated successfully. %s"
+msgstr ""
+
+#. Name of the template
+msgid "Page fullwidth"
+msgstr ""
+
+#. Name of the template
+msgid "Page with sidebar"
+msgstr ""
+
+#: search.php:9
+msgid "Nothing found for this search term!"
+msgstr ""
+
+#: search.php:15
+msgid "Try again"
+msgstr ""
+
+#: single.php:46 includes/boxes/loopBlogGrid.php:6 includes/boxes/topBlog.php:6
+msgid ", "
+msgstr ""
+
+#: single.php:159 includes/boxes/loopBlog.php:12 
+#: includes/boxes/loopBlogGrid.php:26
+msgid "Share: "
+msgstr ""
+
+#: single.php:171
+msgid "Written by "
+msgstr ""
+
+#: single.php:188
+msgid "Related Posts"
+msgstr ""
+
+#: single.php:236
+msgid "Previous post"
+msgstr ""
+
+#: single.php:237
+msgid "Next post"
+msgstr ""
+
+#: admin/admin-interface.php:66
+msgid "Options Updated"
+msgstr ""
+
+#: admin/admin-interface.php:69
+msgid "Options Reset"
+msgstr ""
+
+#: admin/admin-interface.php:72
+msgid "Error!"
+msgstr ""
+
+#: admin/admin-interface.php:78
+msgid "Warning- This options panel will not work properly without javascript!"
+msgstr ""
+
+#: admin/admin-interface.php:84
+msgid "Expand"
+msgstr ""
+
+#: admin/admin-interface.php:87 admin/admin-interface.php:119
+msgid "Save All Changes"
+msgstr ""
+
+#: admin/admin-interface.php:94 admin/admin-interface.php:100
+msgid "Import"
+msgstr ""
+
+#: admin/admin-interface.php:102
+msgid "IMPORTANT - READ FIRST"
+msgstr ""
+
+#: admin/admin-interface.php:105
+msgid ""
+"Never run the importer more then once as it will result in extra (double) "
+"content."
+msgstr ""
+
+#: admin/admin-interface.php:106
+msgid ""
+"If you have any doubts whether you should run importer or not, do not "
+"hesitate to contact us.</a>"
+msgstr ""
+
+#: admin/admin-interface.php:108
+msgid "Import Demo"
+msgstr ""
+
+#: admin/admin-interface.php:1637
+msgid "Upload"
+msgstr ""
+
+#: admin/theme-options.php:602
+msgid "OOOPS! 404"
+msgstr ""
+
+#: admin/theme-options.php:608
+msgid ""
+"Sorry, but the page you are looking for has not been found.<br/>Try checking "
+"the URL for errors, then hit refresh.</br>Or you can simply click the icon "
+"below and go home:)"
+msgstr ""
+
+#: admin/theme-options.php:619
+msgid "&copy; 2011 All rights reserved. "
+msgstr ""
+
+#: includes/wp-pagenavi.php:54
+msgid "Page %CURRENT_PAGE% of %TOTAL_PAGES%"
+msgstr ""
+
+#: includes/wp-pagenavi.php:64
+msgid "&laquo; First"
+msgstr ""
+
+#: includes/wp-pagenavi.php:78
+msgid "&laquo;"
+msgstr ""
+
+#: includes/wp-pagenavi.php:88
+msgid "&raquo;"
+msgstr ""
+
+#: includes/wp-pagenavi.php:101
+msgid "Last &raquo;"
+msgstr ""
+
+#: includes/boxes/loopBlog.php:18 includes/boxes/loopBlogGrid.php:33
+msgid "Reading time: "
+msgstr ""
+
+#: includes/boxes/loopBlog.php:18 includes/boxes/loopBlogGrid.php:33
+msgid " min"
+msgstr ""
+
+#: includes/widgets/popular_post_widget.php:15
+msgid "Ragnar - Premium Popular Posts"
+msgstr ""
+
+#: includes/widgets/popular_post_widget.php:86 
+#: includes/widgets/post_slider_widget.php:114 
+#: includes/widgets/social_widget.php:44 includes/widgets/video_widget.php:97
+msgid "Title:"
+msgstr ""
+
+#: includes/widgets/popular_post_widget.php:91 
+#: includes/widgets/post_slider_widget.php:119
+msgid "Number of posts to show:"
+msgstr ""
+
+#: includes/widgets/popular_post_widget.php:93
+msgid "(at most 10)"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:14
+msgid "Displays the post in slider from a selected category"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:16
+msgid "Ragnar - Premium Posts with slider"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:125
+msgid "Show excpert?"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:128
+msgid "Number of words to show in excpert:"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:132
+msgid "Number of posts to show in slider:"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:134
+msgid "(at most 4 for fullwidth slider and 2 for smaller slider)"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:137
+msgid "Category to display"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:147
+msgid "(select category to display)"
+msgstr ""
+
+#: includes/widgets/post_slider_widget.php:150
+msgid "Note: Quote post will not be displayed."
+msgstr ""
+
+#: includes/widgets/post_widget.php:13
+msgid "Displays the post image and excerpt from a selected category"
+msgstr ""
+
+#: includes/widgets/post_widget.php:15
+msgid "Ragnar - Premium Posts"
+msgstr ""
+
+#: includes/widgets/recent_post_widget.php:15
+msgid "Ragnar - Premium Recent Posts"
+msgstr ""
+
+#: includes/widgets/social_widget.php:15
+msgid "Ragnar - Premium Social Widget"
+msgstr ""
+
+#: includes/widgets/social_widget.php:49
+msgid "You can put social icons via Theme options."
+msgstr ""
+
+#: includes/widgets/video_widget.php:13
+msgid "Displays the post image and title."
+msgstr ""
+
+#: includes/widgets/video_widget.php:15
+msgid "Ragnar - Premium Video"
+msgstr ""
+
+#: includes/widgets/video_widget.php:102
+msgid "Video URL:"
+msgstr ""
+
+#: includes/widgets/video_widget.php:104
+msgid "(Youtube or Vimeo or self hosted)"
+msgstr ""
+
+#: includes/widgets/video_widget.php:108
+msgid ""
+"Self hosted video (formats : \"mp4\", \"m4v\", \"webm\", \"ogv\", \"wmv\", "
+"\"flv\")?"
+msgstr ""
+
+#: includes/widgets/video_widget.php:111
+msgid "Image cover for self hosted video:"
+msgstr ""
+
+#: includes/widgets/video_widget.php:113
+msgid "Upload Image"
+msgstr ""
+
+#: includes/widgets/video_widget.php:117
+msgid "Auto play (only for self hosted video)?"
+msgstr ""
+
+#: includes/widgets/video_widget.php:121
+msgid "Display Text with link?"
+msgstr ""
+
+#: includes/widgets/video_widget.php:124
+msgid "Link URL:"
+msgstr ""
+
+#: includes/widgets/video_widget.php:126
+msgid "(Link for the text)"
+msgstr ""
+
+#: includes/widgets/video_widget.php:129
+msgid "Text:"
+msgstr ""
+
+#: includes/widgets/video_widget.php:131
+msgid "(Text over the video)"
+msgstr ""
+
+#: includes/widgets/video_widget.php:134
+msgid "Text bottom margin:"
+msgstr ""
+
+#: includes/widgets/video_widget.php:136
+msgid "(Bottom margin for text with px (200px))"
+msgstr ""
+
+#: admin/import/plugins/parsers_pmc.php:46 
+#: admin/import/plugins/parsers_pmc.php:80 
+#: admin/import/plugins/parsers_pmc.php:88
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: admin/import/plugins/parsers_pmc.php:47
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: admin/import/plugins/parsers_pmc.php:92 
+#: admin/import/plugins/parsers_pmc.php:97 
+#: admin/import/plugins/parsers_pmc.php:289 
+#: admin/import/plugins/parsers_pmc.php:483
+msgid ""
+"This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:252 
+#: admin/import/plugins/wordpress-importer.php:270 
+#: admin/import/plugins/wordpress-importer.php:372 
+#: admin/import/plugins/wordpress-importer.php:380 
+#: admin/import/plugins/wordpress-importer.php:398
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:254
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:340
+msgid "All done."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:340
+msgid "Have fun!"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:342
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:382
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:414
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:464
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:516
+msgid "Assign Authors"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:518
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of this "
+"site. For example, you may want to import all the entries as <code>"
+"admin</code>s entries."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:522
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually changing "
+"the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:542
+msgid "Import Attachments"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:548
+msgid "Download and import file attachments"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:582
+msgid "Import author:"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:604
+msgid "or create new user with login name:"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:610
+msgid "as a new user:"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:626
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:630
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:632
+msgid "- Select -"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:732
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:834
+msgid "Failed to import category %s"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:914
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1006 
+#: admin/import/plugins/wordpress-importer.php:1288
+msgid "Failed to import %s %s"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1058
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1102
+msgid "%s &#8220;%s&#8221; already exists."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1220
+msgid "Failed to import %s &#8220;%s&#8221;"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1550
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1564
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1738
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1764
+msgid "Invalid file type"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1851
+msgid "Remote server returned %1$d %2$s for %3$s"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1864
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1869
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:1875
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:2070
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:2072
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:2224
+msgid ""
+"Import <strong>posts, pages, comments, custom fields, categories, and "
+"tags</strong> from a WordPress export file."
+msgstr ""
+
+#: admin/import/plugins/wordpress-importer.php:2254
+msgid "The given object ID is not that of a menu item."
+msgstr ""
+
+#. Name of the theme
+msgid "Ragnar"
+msgstr ""
+
+#. Description of the theme
+msgid "Ragnar - Premium Wordpress Blog Theme"
+msgstr ""
+
+#. URI of the theme
+msgid "http://themeforest.net"
+msgstr ""
+
+#. Author of the theme
+msgid "premiumcoding"
+msgstr ""
+
+#. Author URI of the theme
+msgid "http://premiumcoding.com"
+msgstr ""

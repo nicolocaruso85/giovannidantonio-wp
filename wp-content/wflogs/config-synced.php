@@ -1,0 +1,6 @@
+<?php exit('Access denied'); __halt_compiler(); ?>
+******************************************************************
+This file is used by the Wordfence Web Application Firewall. Read 
+more at https://docs.wordfence.com/en/Web_Application_Firewall_FAQ
+******************************************************************
+a:19:{s:13:"patternBlocks";s:2:"[]";s:13:"countryBlocks";s:153:"{"blocks":[],"action":"block","loggedInBlocked":"","bypassRedirURL":"","bypassRedirDest":"","bypassViewURL":"","redirURL":"","cookieVal":"5afd42dbb0742"}";s:11:"otherBlocks";s:33:"{"blockedTime":"300","blocks":[]}";s:8:"lockouts";s:37:"{"lockedOutTime":14400,"lockouts":[]}";s:23:"advancedBlockingEnabled";s:1:"1";s:20:"disableWAFIPBlocking";s:1:"0";s:6:"apiKey";s:160:"596f27c00cb5037cc8f968c68362a9df323c3084e11c3145701e0b0f99985ee38edc2c3b0273366c34867f82f2cde6415612c0c18f798f6b1084baae5a2306ebb6480097b8a43950a727a7ef46825368";s:6:"isPaid";b:0;s:7:"siteURL";s:26:"http://giovannidantonio.it";s:7:"homeURL";s:26:"http://giovannidantonio.it";s:14:"whitelistedIPs";s:0:"";s:9:"howGetIPs";s:0:"";s:25:"howGetIPs_trusted_proxies";s:0:"";s:13:"pluginABSPATH";s:27:"/home/giovannidantonio/www/";s:11:"other_WFNet";b:1;s:9:"serverIPs";s:16:"["193.70.3.171"]";s:15:"blockCustomText";s:0:"";s:13:"timeoffset_wf";s:3:"157";s:21:"betaThreatDefenseFeed";b:0;}

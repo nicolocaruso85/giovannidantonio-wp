@@ -1,0 +1,209 @@
+/**************************
+	GENERAL
+***************************/
+
+#logo img {
+display: none;
+}
+
+.category-slider {
+visibility: hidden;
+}
+
+.tp-caption.Newspaper-Subtitle, .Newspaper-Subtitle {
+    color: #fff !important;
+}
+
+.ragnar-read-more a {
+	color: #fff !important;
+    background: none !important;
+    border: 1px solid #333 !important;
+    background: #333 !important;
+
+    letter-spacing: 3px;
+}
+
+.ragnar-read-more a:before,
+.ragnar-read-more a:after {
+	content: none !important;
+}
+
+.ragnar-read-more a:hover {
+    background: #fff !important;
+    text-decoration: none !important;
+    color: #333 !important;
+}
+    
+.bx-pager.moved { 
+margin-top: -160px !important;
+}
+
+.widget ul li.cat-item-1 { display: none !important; }
+
+
+/**************************
+	SECTION
+***************************/
+
+
+
+/**************************
+	SECTION
+***************************/
+
+
+/**************************
+	PRESS
+***************************/
+
+body.page-id-7920 #ajax-load-more h1 {
+    margin-bottom: 40px;
+}
+
+body.page-id-7920 #ajax-load-more .press-item {
+	    width: calc(100%/3 - 70px);
+    float: left;
+    margin-right: 70px;
+    margin-bottom: 30px;
+}
+
+body.page-id-7920 #ajax-load-more .press-item img {
+	    width: 100%;
+}
+
+body.page-id-7920 #ajax-load-more .press-item h2.title {
+    font-size: 15px !important;
+    text-align: left !important;
+    letter-spacing: 0 !important;
+    font-family: 'Raleway', sans-serif;
+    line-height: 20px !important;
+		    min-height: 60px;
+}
+
+/*body.page-id-7920 .sidebar .widgett {
+    margin: 0px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #ddd;
+    overflow: auto;
+}*/
+
+body.page-id-7920 .widgett .imgholder { clear: both !important; }
+
+body.page-id-7920 .wp-pagenavi {margin-top: 51px; }
+
+body.page-id-7920 .blogimage img:hover { opacity: 1 !important; }
+
+body.page-id-7920 .blogimage {
+	-webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25s ease-in-out;
+    -o-transition: all 0.25s ease-in-out;
+    -ms-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+}
+
+body.page-id-7920 .blogimage:hover { opacity: 0.75 !important; }
+
+body.page-id-7920 .sidebar .content.singlepage { padding: initial;     max-width: 100%; }
+
+body.page-id-7920 .sidebar .content.singlepage .usercontent {     max-width: 100%; }
+
+/*body.page-id-7920 .main .sidebar.fixed {
+    position: fixed;
+        top: 70px;
+    right: 352px;
+}*/
+    
+
+
+
+/**************************
+	CONTACTS
+***************************/
+
+.page-id-6858 .mailTo {
+	color: #ad6c60 !important;
+	font-weight: bold;
+}
+
+.page-id-6858 div.wpcf7-validation-errors ,
+.page-id-6858 div.wpcf7-mail-sent-ok{
+	padding-left: 0;
+    margin-left: 0;
+    border: none;
+}
+
+.page-id-6858 span.wpcf7-not-valid-tip {
+	    position: relative;
+    top: -19px;
+}
+
+
+/**************************
+	SEARCH
+***************************/
+
+.search-results .content > h1 {
+	border-bottom: 1px dotted #ddd;
+    padding-bottom: 34px;
+}
+    
+
+/**************************
+	ARTICOLO
+***************************/
+
+.post-navigation {
+	display: none;
+}
+
+
+/**************************
+	FOOTER
+***************************/
+
+.footer-social-inside {
+	width: 100% !important;
+}
+
+.block3 span.instagram-user {
+	    text-align: center;
+    display: block;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-family: 'Oswald', sans-serif;
+}
+
+.block3 h4.block3-instagram-title {
+	padding-bottom: 0;
+}
+
+
+/**************************
+	INSTAGRAM
+***************************/
+
+#sb_instagram .sbi_info { display: none !important; }
+#sb_instagram .sb_instagram_header { display: none; }
+
+
+/**************************
+	PAGINA ARTICOLO BLOG
+***************************/
+
+.single-post #slider-category {
+	    margin-bottom: 20px !important;
+}
+
+.single-post .gallery-columns-3#gallery-2 .gallery-item {
+    padding-left: 0;
+    margin-right: 20px;
+}
+
+.single-post .gallery-columns-3#gallery-2 img {
+	border: none;
+}
+
+
+
+
+
