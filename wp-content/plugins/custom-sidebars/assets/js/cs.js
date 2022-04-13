@@ -1,6 +1,5 @@
-/*! Custom Sidebars - v3.1.1
- * https://premium.wpmudev.org/project/custom-sidebars-pro/
- * Copyright (c) 2017; * Licensed GPLv2+ */
+/*! Custom Sidebars - v3.2.3
+ * Copyright (c) 2020; * Licensed GPLv2+ */
 /*global window:false */
 /*global console:false */
 /*global document:false */
@@ -496,6 +495,7 @@ window.csSidebars = null;
 		 *           or a CsSidebar object.
 		 */
 		showEditor: function( data ) {
+
 			var popup = null,
 				ajax = null;
 
@@ -572,6 +572,10 @@ window.csSidebars = null;
 				if ( data.button ) {
 					popup.$().find( '.btn-save' ).text( data.button );
 				}
+				if ( data.advance ) {
+					popup.$().find( '#csb-more' ).prop( 'checked', true );
+					show_extras();
+				}
 			}
 
 			// Close popup after ajax request
@@ -606,15 +610,19 @@ window.csSidebars = null;
 			// Submit the data via ajax.
 			function save_data() {
 				var form = popup.$().find( 'form' );
-
+				if ( 0 < popup.$('#csb-more:checked').length ) {
+					jQuery('<input>').attr({
+						type: 'hidden',
+						value: 'show',
+						name: 'advance'
+					}).appendTo(form);
+				}
 				// Start loading-animation.
 				popup.loading( true );
-
 				ajax.reset()
 					.data( form )
 					.ondone( handle_done_save )
 					.load_json();
-
 				return false;
 			}
 
@@ -636,7 +644,7 @@ window.csSidebars = null;
 					.data({
 						'do': 'get',
 						'sb': data.id,
-                        '_wpnonce': csSidebarsData._wpnonce_get
+						'_wpnonce': csSidebarsData._wpnonce_get
 					})
 					.ondone( set_values )
 					.load_json();
@@ -982,6 +990,24 @@ window.csSidebars = null;
 				form = null,
 				id = sb.getID();
 
+			/**
+			 * (_) add new rule
+			 *
+			 * @since 3.2.0
+			 */
+			function _add_new_rule( data, table ) {
+				var template = wp.template('custom-sidebars-new-rule-row');
+				$('tbody', table ).append( template( data ) );
+				$('tfoot', table).hide();
+				$('tbody .dashicons-trash', table).on( 'click', function() {
+					$(this).closest('tr').detach();
+					if ( 0 === $('tbody tr', table ).length ) {
+						$('tfoot', table).show();
+					}
+				});
+				return false;
+			}
+
 			// Display the location data after it was loaded by ajax.
 			function handle_done_load( resp, okay, xhr ) {
 				var theme_sb, opt, name, msg = {}; // Only used in error case.
@@ -1110,7 +1136,6 @@ window.csSidebars = null;
 				for ( var key3 in data_pst ) {
 					opt = jQuery( '<option></option>' );
 					name = data_pst[ key3 ].name;
-
 					opt.attr( 'value', key3 ).text( name );
 					lst_pst.append( opt );
 				}
@@ -1138,7 +1163,6 @@ window.csSidebars = null;
 				for ( var key5 in data_arc ) {
 					opt = jQuery( '<option></option>' );
 					name = data_arc[ key5 ].name;
-
 					opt.attr( 'value', key5 ).text( name );
 					lst_arc.append( opt );
 				}
@@ -1166,7 +1190,6 @@ window.csSidebars = null;
 				for ( var key7 in data_aut ) {
 					opt = jQuery( '<option></option>' );
 					name = data_aut[ key7 ].name;
-
 					opt.attr( 'value', key7 ).text( name );
 					lst_aut.append( opt );
 				}
@@ -1184,6 +1207,80 @@ window.csSidebars = null;
 						}
 					}
 				}
+
+				// ----- 3rd part plugins ----------------------------------------------
+				var lst_3rd = popup.$().find( '.cs-3rd-part .cs-datalist' );
+				lst_3rd.each( function() {
+					var data_3rd = resp[$(this).data('id')];
+					$(this).empty();
+					// Add the options
+					for ( var key9 in data_3rd ) {
+						opt = jQuery( '<option></option>' );
+						name = data_3rd[ key9 ].name;
+						opt.attr( 'value', key9 ).text( name );
+						$(this).append( opt );
+					}
+					// Select options
+					for ( var key10 in data_3rd ) {
+						if ( data_3rd[ key10 ].archive ) {
+							for ( theme_sb in data_3rd[ key10 ].archive ) {
+								_select_option(
+									data_3rd[ key10 ].archive[ theme_sb ],
+									theme_sb,
+									key10,
+									$(this)
+								);
+							}
+						}
+					}
+				});
+
+				/**
+				 * ----- Custom Taxomies ----------------------------------------------
+				 * @since 3.1.4
+				 */
+				var lst_custom_taxonomies = popup.$().find( '.cf-custom-taxonomies .cs-datalist' );
+				lst_custom_taxonomies.each( function() {
+					var data_custom_taxonomy = resp[$(this).data('id')];
+					$(this).empty();
+					// Add the options
+					for ( var key_custom_taxonomy in data_custom_taxonomy ) {
+						opt = jQuery( '<option></option>' );
+						name = data_custom_taxonomy[ key_custom_taxonomy ].name;
+						opt.attr( 'value', key_custom_taxonomy ).text( name );
+						$(this).append( opt );
+					}
+					// Select options
+					for ( var key_custom_tax in data_custom_taxonomy ) {
+						if ( data_custom_taxonomy[ key_custom_tax ].single ) {
+							for ( theme_sb in data_custom_taxonomy[ key_custom_tax ].single ) {
+								_select_option(
+									data_custom_taxonomy[ key_custom_tax ].single[ theme_sb ],
+									theme_sb,
+									key_custom_tax,
+									$(this)
+								);
+							}
+						}
+					}
+				});
+
+				/**
+				 * ----- @media screen width ------------------------------------------
+                 *
+				 * @since 3.2.0
+				 */
+				var table = popup.$().find('.csb-media-screen-width table' );
+				$.each( resp.screen, function( size, value ) {
+					$.each( value, function( minmax, mode ) {
+						var data = {
+							minmax: minmax,
+							mode: mode,
+							size: size
+						};
+						_add_new_rule( data, table );
+					});
+				});
 
 			} // end: handle_done_load()
 
@@ -1232,11 +1329,26 @@ window.csSidebars = null;
 			// Submit the data and close the popup.
 			function save_data() {
 				popup.loading( true );
-
 				ajax.reset()
 					.data( form )
 					.ondone( handle_done_save )
 					.load_json();
+			}
+
+			/**
+			 * add new rule
+			 *
+			 * @since 3.2.0
+			 */
+			function add_new_rule() {
+				var table = $('table', $(this).parent());
+				var data = {
+					minmax: 'max',
+					mode: 'hide',
+					size: 0
+				};
+				_add_new_rule( data, table );
+				return false;
 			}
 
 			// Show the LOCATION popup.
@@ -1265,6 +1377,7 @@ window.csSidebars = null;
 			popup.$().on( 'click', '.detail-toggle', toggle_details );
 			popup.$().on( 'click', '.btn-save', save_data );
 			popup.$().on( 'click', '.btn-cancel', popup.destroy );
+			popup.$().on( 'click', '.btn-add-rule', add_new_rule );
 
 			return true;
 		},
@@ -1367,7 +1480,6 @@ window.csSidebars = null;
 			return false;
 		},
 
-
 		/*=============================*\
 		=================================
 		==                             ==
@@ -1375,7 +1487,6 @@ window.csSidebars = null;
 		==                             ==
 		=================================
 		\*=============================*/
-
 
 		/**
 		 * =====================================================================
@@ -1486,7 +1597,7 @@ window.csSidebars = null;
 	 */
 	jQuery(document).ready( function($) {
 		window.setTimeout( function() {
-            window.csSidebars.showGetStartedBox();
+			window.csSidebars.showGetStartedBox();
 		}, 1000);
 	});
 })(jQuery);
@@ -1514,51 +1625,77 @@ window.csSidebars = null;
  * @see http://james.padolsey.com/javascript/sorting-elements-with-jquery/
  */
 jQuery.fn.sortElements = (function(){
-
-    var sort = [].sort;
-
-    return function(comparator, getSortable) {
-
-        getSortable = getSortable || function(){return this;};
-
-        var placements = this.map(function(){
-
-            var sortElement = getSortable.call(this),
-                parentNode = sortElement.parentNode,
-
-                // Since the element itself will change position, we have
-                // to have some way of storing its original position in
-                // the DOM. The easiest way is to have a 'flag' node:
-                nextSibling = parentNode.insertBefore(
-                    document.createTextNode(''),
-                    sortElement.nextSibling
-                );
-
-            return function() {
-
-                if (parentNode === this) {
-                    throw new Error(
-                        "You can't sort elements if any one is a descendant of another."
-                    );
-                }
-
-                // Insert before flag:
-                parentNode.insertBefore(this, nextSibling);
-                // Remove flag:
-                parentNode.removeChild(nextSibling);
-
-            };
-
-        });
-
-        return sort.call(this, comparator).each(function(i){
-            placements[i].call(getSortable.call(this));
-        });
-
-    };
-
+	var sort = [].sort;
+	return function(comparator, getSortable) {
+		getSortable = getSortable || function(){return this;};
+		var placements = this.map(function(){
+			var sortElement = getSortable.call(this),
+			parentNode = sortElement.parentNode,
+			// Since the element itself will change position, we have
+			// to have some way of storing its original position in
+			// the DOM. The easiest way is to have a 'flag' node:
+			nextSibling = parentNode.insertBefore(
+					document.createTextNode(''),
+					sortElement.nextSibling
+					);
+			return function() {
+				if (parentNode === this) {
+					throw new Error(
+							"You can't sort elements if any one is a descendant of another."
+							);
+				}
+				// Insert before flag:
+				parentNode.insertBefore(this, nextSibling);
+				// Remove flag:
+				parentNode.removeChild(nextSibling);
+			};
+		});
+		return sort.call(this, comparator).each(function(i){
+			placements[i].call(getSortable.call(this));
+		});
+	};
 })();
 
+
+/*global console:false */
+/*global document:false */
+/*global ajaxurl:false */
+(function($){
+    jQuery(document).ready( function($) {
+        $('#screen-options-wrap .cs-allow-author input[type=checkbox]').on( 'change', function() {
+            var data = {
+                'action': 'custom_sidebars_allow_author',
+                '_wpnonce': $('#custom_sidebars_allow_author').val(),
+                'value': this.checked
+            };
+            $.post( ajaxurl, data );
+        });
+    });
+})(jQuery);
+
+/*global console:false */
+/*global document:false */
+/*global ajaxurl:false */
+
+/**
+ * Handle "Custom sidebars configuration is allowed for:" option on
+ * widgets screen options.
+ */
+(function($){
+    jQuery(document).ready( function($) {
+        $('#screen-options-wrap .cs-custom-taxonomies input[type=checkbox]').on( 'change', function() {
+            var data = {
+                'action': 'custom_sidebars_metabox_custom_taxonomies',
+                '_wpnonce': $('#custom_sidebars_custom_taxonomies').val(),
+                'fields': {}
+            };
+            $('#screen-options-wrap .cs-custom-taxonomies input[type=checkbox]').each( function() {
+                data.fields[$(this).val()] = this.checked;
+            });
+            $.post( ajaxurl, data );
+        });
+    });
+})(jQuery);
 
 /*global console:false */
 /*global document:false */

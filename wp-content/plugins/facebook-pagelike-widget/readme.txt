@@ -1,22 +1,30 @@
-=== Facebook Widget ===
+=== Widget for Social Page Feeds ===
 Contributors: Milap
 Tags: facebook, facebook like box, facebook simple like, facebook fan pages, facebook like button, facebook button share, facebook social bookmarking, facebook feeds, facebook feed widget, social share, wordpress social share, socialmedia, social media widget, social media sharing, social media icon 
 Donate link: https://www.paypal.me/MilapPatel
 Requires at least: 3.0.1
-Tested up to: 4.9
+Tested up to: 5.9
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin adds a Simple Facebook page Like Widget into your WordPress sidebar, footer area(as widget) & Page or Post(as shortcode).
+Formerly "Facebook Page Like Widget". This plugin adds a Simple Facebook page Like Widget into your WordPress sidebar, footer area(as widget) & Page or Post(as shortcode).
 
 == Description ==
 
-One of the most popular & lightweight plugin for Facebook page feeds widget with over 7,25,000 downloads and 1,00,000+ active installs.
+**Formerly "Facebook Page Like Widget".**
+
+> Did you find this plugin helpful? Please consider [leaving a 5-star review](https://wordpress.org/support/plugin/facebook-pagelike-widget/reviews/?filter=5#new-post).
+
+> Did this plugin made your life easy? Please consider [donating](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=neetap179@gmail.com&lc=US&item_name=Providing+Excellent+WordPress+plugin+support&no_note=0&no_shipping=2&curency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted).
+
+One of the most popular & lightweight plugin for Facebook page feeds widget with over 12,77,000 downloads and 1,00,000+ active installs.
 
 An inside look:
 
-http://www.youtube.com/watch?v=eS6ZWaO7UN0
+http://www.youtube.com/watch?v=8gulPNAd264
+
+Please subscribe to my [YouTube channel](https://www.youtube.com/c/CodeCanvas/) for more technical videos.
 
 This widget will provide you the most simple and attractive way to display Facebook page likes into your WordPress sidebar. 
 
@@ -30,7 +38,9 @@ This widget will provide you the most simple and attractive way to display Faceb
 
 It supports short code, open your Post or Page, Add **[fb_widget]** into Post or Page, Save it. You are done. Check FAQ for more shortcode options.
 
-If you have any questions / issues / suggestions regarding my plugin, reach me at,
+**Paid Support**
+
+If you need my help with installation / configurations / issues with my plugin, reach me at below for paid support,
 
 * Gmail : cemilap.88@gmail.com
 * Blog : https://patelmilap.wordpress.com/contact-me/
@@ -41,6 +51,20 @@ I will try my best to reply you within 1 business day.
 
 If you loved my plugin & support, please leave your review [Here](https://wordpress.org/support/view/plugin-reviews/facebook-pagelike-widget?filter=5) , so people can use it with confidence.
 
+= Recommended Plugins =
+
+The following plugins are recommended for users:
+
+* [Ultimate Twitter Feeds](https://wordpress.org/plugins/ultimate-twitter-feeds/) With Ultimate Twitter Feeds Widget, you can display your Twitter Profile feeds, Profile List Feeds and Single Tweet on your website quickly.
+
+= Privacy Notices =
+
+With the default configuration, this plugin, in itself, does not:
+
+* use cookies.
+* track users by stealth.
+* write any user personal data to the database.
+* send any data to external servers.
 
 == Installation ==
 
@@ -55,9 +79,9 @@ http://codex.wordpress.org/Managing_Plugins
 
 = How to use shortcode ? =
 * You can use below shortcode in Post or Page.
-`[fb_widget fb_url="http://www.facebook.com/Instagram"]`
+`[fb_widget fb_url='http://www.facebook.com/Instagram']`
 You can use more parameters like below.
-`[fb_widget fb_url="http://www.facebook.com/Instagram" width="500" height="450" data_small_header="false" select_lng="ru_RU" data_adapt_container_width="false" data_hide_cover="false" data_show_facepile="false" data_show_posts="true"]`
+`[fb_widget fb_url='http://www.facebook.com/Instagram' width='500' height='450' data_small_header='false' select_lng='ru_RU' data_adapt_container_width='false' data_hide_cover='false' data_show_facepile='false' data_show_posts='true' data_tabs='timeline, messages, events']`
 
 = Widget doesn't working in Mozilla Firefox  = 
 * If widget works great in all browsers except Mozilla Firefox, You must press the settings off "Use protection against tracking in private window", its security settings for Mozilla, nothing to do with my plugin.
@@ -70,7 +94,7 @@ You can use more parameters like below.
 
 = It is working in some system, not working in other system ? =
 * If it is working in some system & not working with other system, there are 2 possibilties :
-	1) Anti virus of your computer can stop my widget loading. Some of my widget users had same problem in past. You can check with disable your anti virus temporary. 
+	1) Anti virus of your computer can stop my widget loading. Some of my widget users had same problem in past. You can check with disable your anti virus temporarily.
 	2) Your browser has some ad block extention installed that may cause stop my plugin loading.  
 
 
@@ -82,6 +106,17 @@ You can use more parameters like below.
 
 
 == Changelog ==
+
+= Version 6.0 =
+* Added code for Review link notice in admin.
+* Fixed code readability.
+* Code optimization.
+
+= Version 5.1 =
+* Fixed Cross-Site Scripting (XSS) Vulnerability with plugin shortcode.
+
+= Version 5.0 =
+* Added support for 3 feed type options (timeline,events,messages).
 
 = Version 4.2.3 =
 * Added support for PHP version 7.2
@@ -121,7 +156,7 @@ You can use more parameters like below.
 
 * Added support for localization (Multilanguage support)(Added .pot file)
 * Added option to add custom css for widget
-* Added option to select language to show your Facebook widget in any language you want.
+* Added option to select language to show your Facebook Page Feeds in any language you want.
 
 = Version 2.1 =
 

@@ -33,7 +33,7 @@ class MPSUM_Admin_Advanced_Preview {
 		$items = array(
 			'auto-backup' => array(
 				'label' => __('Automatic backup', 'stops-core-theme-and-plugin-updates'),
-				'desc' => __('Takes a automatic backup before your website is updated via an integration with UpdraftPlus', 'stops-core-theme-and-plugin-updates'),
+				'desc' => __('Takes an automatic backup before your website is updated via an integration with UpdraftPlus', 'stops-core-theme-and-plugin-updates'),
 				'icon' => 'backup'
 			),
 			'auto-update-scheduling' => array(
@@ -56,6 +56,16 @@ class MPSUM_Admin_Advanced_Preview {
 				'desc' => __('Integrates with third-party services to allow automatic updates to be triggered via cron or tools like Zapier.', 'stops-core-theme-and-plugin-updates'),
 				'icon' => 'all_out'
 			),
+			'version-control-protection' => array(
+				'label' => __('Version control protection', 'stops-core-theme-and-plugin-updates'),
+				'desc' => __("Prevent updates to themes and plugins under version control.", 'stops-core-theme-and-plugin-updates'),
+				'icon' => 'code'
+			),
+			'unmaintained-plugins' => array(
+				'label' => __('Unmaintained plugins', 'stops-core-theme-and-plugin-updates'),
+				'desc' => __("Check for unmaintained plugins in the WordPress plugin directory.", 'stops-core-theme-and-plugin-updates'),
+				'icon' => 'hourglass_empty'
+			),
 			'plugin-safe-mode' => array(
 				'label' => __('Plugin safe mode', 'stops-core-theme-and-plugin-updates'),
 				'desc' => __("Prevent updates that are not compatible with your current WordPress version or your server's PHP version.", 'stops-core-theme-and-plugin-updates'),
@@ -77,7 +87,7 @@ class MPSUM_Admin_Advanced_Preview {
 				'icon' => 'label'
 			),
 		);
-		
+
 		$items = apply_filters('mpsum_premium_items_list', $items);
 
 		return is_array($items) ? $items : array();
@@ -88,7 +98,7 @@ class MPSUM_Admin_Advanced_Preview {
 	 */
 	public function headings() {
 		foreach ($this->get_items() as $key => $item) {
-			printf('<div class="premium-only" data-menu_name="advanced-premium-preview_'.$key.'">%s <span class="eum-advanced-menu-text">%s</span><span class="eum-advanced-menu-premium-only">%s</span></div>', '<i class="material-icons">'.$item['icon'].'</i>', esc_html__($item['label'], 'stops-core-theme-and-plugin-updates'), __('Premium', 'stops-core-theme-and-plugin-updates'));
+			printf('<div class="premium-only" data-menu_name="advanced-premium-preview_'.$key.'">%s <span class="eum-advanced-menu-text">%s</span><span class="eum-advanced-menu-premium-only">%s</span></div>', '<i class="material-icons">'.$item['icon'].'</i>', $item['label'], __('Premium', 'stops-core-theme-and-plugin-updates'));
 		}
 	}
 

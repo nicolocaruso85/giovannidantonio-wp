@@ -34,6 +34,8 @@ use FacebookAds\Object\Values\ProductItemAvailabilityValues;
 use FacebookAds\Object\Values\ProductItemCommerceTaxCategoryValues;
 use FacebookAds\Object\Values\ProductItemConditionValues;
 use FacebookAds\Object\Values\ProductItemGenderValues;
+use FacebookAds\Object\Values\ProductItemImageFetchStatusValues;
+use FacebookAds\Object\Values\ProductItemMarkedForProductLaunchValues;
 use FacebookAds\Object\Values\ProductItemReviewStatusValues;
 use FacebookAds\Object\Values\ProductItemShippingWeightUnitValues;
 use FacebookAds\Object\Values\ProductItemVisibilityValues;
@@ -69,13 +71,38 @@ class ProductItem extends AbstractCrudObject {
     $ref_enums['Availability'] = ProductItemAvailabilityValues::getInstance()->getValues();
     $ref_enums['Condition'] = ProductItemConditionValues::getInstance()->getValues();
     $ref_enums['Gender'] = ProductItemGenderValues::getInstance()->getValues();
+    $ref_enums['ImageFetchStatus'] = ProductItemImageFetchStatusValues::getInstance()->getValues();
     $ref_enums['ReviewStatus'] = ProductItemReviewStatusValues::getInstance()->getValues();
     $ref_enums['ShippingWeightUnit'] = ProductItemShippingWeightUnitValues::getInstance()->getValues();
     $ref_enums['Visibility'] = ProductItemVisibilityValues::getInstance()->getValues();
     $ref_enums['CommerceTaxCategory'] = ProductItemCommerceTaxCategoryValues::getInstance()->getValues();
+    $ref_enums['MarkedForProductLaunch'] = ProductItemMarkedForProductLaunchValues::getInstance()->getValues();
     return $ref_enums;
   }
 
+
+  public function getChannelsToIntegrityStatus(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_GET,
+      '/channels_to_integrity_status',
+      new CatalogItemChannelsToIntegrityStatus(),
+      'EDGE',
+      CatalogItemChannelsToIntegrityStatus::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
 
   public function getProductSets(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
@@ -127,8 +154,11 @@ class ProductItem extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'catalog_id' => 'string',
       'image_height' => 'unsigned int',
       'image_width' => 'unsigned int',
+      'override_country' => 'string',
+      'override_language' => 'string',
     );
     $enums = array(
     );
@@ -152,8 +182,8 @@ class ProductItem extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'additional_image_files' => 'list<file>',
       'additional_image_urls' => 'list<string>',
+      'additional_uploaded_image_ids' => 'list<string>',
       'additional_variant_attributes' => 'map',
       'android_app_name' => 'string',
       'android_class' => 'string',
@@ -162,6 +192,7 @@ class ProductItem extends AbstractCrudObject {
       'availability' => 'availability_enum',
       'brand' => 'string',
       'category' => 'string',
+      'category_specific_fields' => 'map',
       'checkout_url' => 'string',
       'color' => 'string',
       'commerce_tax_category' => 'commerce_tax_category_enum',
@@ -175,6 +206,7 @@ class ProductItem extends AbstractCrudObject {
       'custom_label_4' => 'string',
       'description' => 'string',
       'expiration_date' => 'string',
+      'fb_product_category' => 'string',
       'gender' => 'gender_enum',
       'gtin' => 'string',
       'image_url' => 'string',
@@ -190,6 +222,7 @@ class ProductItem extends AbstractCrudObject {
       'iphone_url' => 'string',
       'launch_date' => 'string',
       'manufacturer_part_number' => 'string',
+      'marked_for_product_launch' => 'marked_for_product_launch_enum',
       'material' => 'string',
       'mobile_link' => 'string',
       'name' => 'string',
@@ -200,6 +233,7 @@ class ProductItem extends AbstractCrudObject {
       'pattern' => 'string',
       'price' => 'unsigned int',
       'product_type' => 'string',
+      'quantity_to_sell_on_facebook' => 'unsigned int',
       'retailer_id' => 'string',
       'return_policy_days' => 'unsigned int',
       'sale_price' => 'unsigned int',
@@ -219,6 +253,7 @@ class ProductItem extends AbstractCrudObject {
       'commerce_tax_category_enum' => ProductItemCommerceTaxCategoryValues::getInstance()->getValues(),
       'condition_enum' => ProductItemConditionValues::getInstance()->getValues(),
       'gender_enum' => ProductItemGenderValues::getInstance()->getValues(),
+      'marked_for_product_launch_enum' => ProductItemMarkedForProductLaunchValues::getInstance()->getValues(),
       'visibility_enum' => ProductItemVisibilityValues::getInstance()->getValues(),
     );
 

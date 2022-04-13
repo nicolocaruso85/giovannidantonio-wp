@@ -5,8 +5,8 @@ Plugin Name: Easy Updates Manager
 Plugin URI: https://easyupdatesmanager.com
 Description: Manage and disable WordPress updates, including core, plugin, theme, and automatic updates - Works with Multisite and has built-in logging features.
 Author: Easy Updates Manager Team
-Version: 8.0.5
-Requires at least: 4.6
+Version: 9.0.12
+Update URI: https://wordpress.org/plugins/stops-core-theme-and-plugin-updates/
 Author URI: https://easyupdatesmanager.com
 Contributors: kidsguide, ronalfy
 Text Domain: stops-core-theme-and-plugin-updates
@@ -17,8 +17,10 @@ Network: true
 // @codingStandardsIgnoreEnd
 
 if (!defined('ABSPATH')) die('No direct access allowed');
+
+if (!defined('EASY_UPDATES_MANAGER_VERSION')) define('EASY_UPDATES_MANAGER_VERSION', '9.0.12');
+
 if (!defined('EASY_UPDATES_MANAGER_MAIN_PATH')) define('EASY_UPDATES_MANAGER_MAIN_PATH', plugin_dir_path(__FILE__));
-if (!defined('EASY_UPDATES_MANAGER_VERSION')) define('EASY_UPDATES_MANAGER_VERSION', '8.0.4');
 if (!defined('EASY_UPDATES_MANAGER_URL')) define('EASY_UPDATES_MANAGER_URL', plugin_dir_url(__FILE__));
 if (!defined('EASY_UPDATES_MANAGER_SITE_URL')) define('EASY_UPDATES_MANAGER_SITE_URL', 'https://easyupdatesmanager.com/');
 if (!defined('EASY_UPDATES_MANAGER_SLUG')) define('EASY_UPDATES_MANAGER_SLUG', plugin_basename(__FILE__));
@@ -64,9 +66,9 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 		protected static $notices_instance = null;
 
 		// Minimum PHP version required to run this plugin
-		const PHP_REQUIRED = '5.3';
+		const PHP_REQUIRED = '5.4';
 		// Minimum WP version required to run this plugin
-		const WP_REQUIRED = '4.5';
+		const WP_REQUIRED = '5.1';
 
 		/**
 		 * Retrieve a class instance.
@@ -135,7 +137,7 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 			}
 
 			include ABSPATH.WPINC.'/version.php';
-			if (version_compare($wp_version, self::WP_REQUIRED, '<')) {
+			if (version_compare($wp_version, self::WP_REQUIRED, '<')) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
 				add_action('admin_notices', array($this, 'admin_notice_insufficient_wp'));
 				if (is_multisite()) {
 					add_action('network_admin_notices', array($this, 'admin_notice_insufficient_wp'));
@@ -175,6 +177,23 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 				MPSUM_Logs::run();
 			}
 
+			$options = MPSUM_Updates_Manager::get_options();
+			if (!isset($options['migrated_from_9_0_9'])) {
+				if (isset($options['core']['core_updates'])) {
+					switch ($options['core']['core_updates']) {
+						case 'disable_auto_updates_migrated_from_9_0_9':
+							$options['core']['core_updates'] = 'on'; // 'on' is for 'Manually update', it's different with 'automatic', since 'automatic_off' (disable auto updates) and 'on' is basically the same, so we use 'on' instead and remove the 'automatic_off', also the UI.
+							break;
+						case 'manually_update_migrated_from_9_0_9':
+							$options['core']['core_updates'] = 'automatic_minor';
+							break;
+						default:
+							break;
+					}
+				}
+				$options['migrated_from_9_0_9'] = true;
+				MPSUM_Updates_Manager::update_options($options);
+			}
 			MPSUM_Admin_Ajax::get_instance();
 		}
 
@@ -240,7 +259,10 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 			if ('advanced' === $context) {
 				$options = self::maybe_migrate_excluded_users_options($options);
 			}
-			
+
+			// Migrate to new UI
+			$options = self::maybe_migrate_ui_options($options);
+
 			// Store options
 			if (!is_array($options)) {
 				$options = array();
@@ -361,6 +383,96 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 		}
 
 		/**
+		 * Migrates from the legacy UI options to the new UI options.
+		 *
+		 * @param array $options Array of plugin options
+		 *
+		 * @return array Updated array of plugin options
+		 */
+		public static function maybe_migrate_ui_options($options) {
+
+			$new_options = array();
+			// Migrate WordPress Core options.
+			if (isset($options['core']['automatic_major_updates']) && isset($options['core']['automatic_minor_updates'])) {
+				if ('on' === $options['core']['automatic_major_updates'] && 'on' === $options['core']['automatic_minor_updates']) {
+					$new_options['core']['core_updates'] = 'automatic';
+				} elseif ('on' === $options['core']['automatic_minor_updates']) {
+					$new_options['core']['core_updates'] = 'automatic_minor';
+				} elseif ('on' === $options['core']['automatic_major_updates']) {
+					$new_options['core']['core_updates'] = 'automatic';
+				} elseif ('off' === $options['core']['automatic_major_updates'] || 'off' === $options['core']['automatic_minor_updates']) {
+					$new_options['core']['core_updates'] = 'on'; // 'on' is for 'Manually update', it's different with 'automatic', since 'automatic_off' and 'on' is basically the same, so we use 'on' instead and remove the 'automatic_off', also the UI.
+				}
+				unset($options['core']['automatic_major_updates']);
+			}
+			if (isset($options['core']['core_updates']) && 'off' === $options['core']['core_updates']) {
+				$new_options['core']['core_updates'] = 'off';
+			} elseif (!isset($options['migrated_from_9_0_9']) && isset($options['core']['core_updates']) && 'automatic_off' === $options['core']['core_updates']) {
+				$new_options['core']['core_updates'] = 'disable_auto_updates_migrated_from_9_0_9';
+			} elseif (!isset($options['migrated_from_9_0_9']) && isset($options['core']['core_updates']) && 'on' === $options['core']['core_updates']) {
+				// the 'Manually update (on)' setting doesn't do automatic minor updates anymore, so we change users' preference whose setting is set to 'Manually update' to becoming 'automatic_minor' (Auto update all minor versions)
+				$new_options['core']['core_updates'] = 'manually_update_migrated_from_9_0_9';
+			}
+			if (isset($new_options['core']['core_updates'])) {
+				$options['core']['core_updates'] = $new_options['core']['core_updates'];
+			}
+
+			// Migrate Plugin Options.
+			if (isset($options['core']['automatic_plugin_updates'])) {
+				if ('on' === $options['core']['automatic_plugin_updates']) {
+					$new_options['core']['plugin_updates'] = 'automatic';
+				} elseif ('custom' === $options['core']['automatic_plugin_updates']) {
+					$new_options['core']['plugin_updates'] = 'individual';
+				} elseif ('off' === $options['core']['automatic_plugin_updates']) {
+					$new_options['core']['plugin_updates'] = 'automatic_off';
+				}
+				unset($options['core']['automatic_plugin_updates']);
+			}
+			if (isset($options['core']['plugin_updates']) && 'off' === $options['core']['plugin_updates']) {
+				$new_options['core']['plugin_updates'] = 'off';
+			}
+			if (isset($new_options['core']['plugin_updates'])) {
+				$options['core']['plugin_updates'] = $new_options['core']['plugin_updates'];
+			}
+
+			// Migrate Theme Options.
+			if (isset($options['core']['automatic_theme_updates'])) {
+				if ('on' === $options['core']['automatic_theme_updates']) {
+					$new_options['core']['theme_updates'] = 'automatic';
+				} elseif ('custom' === $options['core']['automatic_theme_updates']) {
+					$new_options['core']['theme_updates'] = 'individual';
+				} elseif ('off' === $options['core']['automatic_theme_updates']) {
+					$new_options['core']['theme_updates'] = 'automatic_off';
+				}
+				unset($options['core']['automatic_theme_updates']);
+			}
+			if (isset($options['core']['theme_updates']) && 'off' === $options['core']['theme_updates']) {
+				$new_options['core']['theme_updates'] = 'off';
+			}
+			if (isset($new_options['core']['theme_updates'])) {
+				$options['core']['theme_updates'] = $new_options['core']['theme_updates'];
+			}
+
+			// Migrate Translation Options.
+			if (isset($options['core']['automatic_translation_updates'])) {
+				if ('on' === $options['core']['automatic_translation_updates']) {
+					$new_options['core']['translation_updates'] = 'automatic';
+				} elseif ('off' === $options['core']['automatic_translation_updates']) {
+					$new_options['core']['translation_updates'] = 'automatic_off';
+				}
+				unset($options['core']['automatic_translation_updates']);
+			}
+			if (isset($options['core']['translation_updates']) && 'off' === $options['core']['translation_updates']) {
+				$new_options['core']['translation_updates'] = 'off';
+			}
+			if (isset($new_options['core']['translation_updates'])) {
+				$options['core']['translation_updates'] = $new_options['core']['translation_updates'];
+			}
+
+			return $options;
+		}
+
+		/**
 		 * Migrates `excluded_users` option to `advanced` context
 		 *
 		 * @param array $options Array of plugin options
@@ -396,7 +508,7 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 		 * @internal Uses plugins_loaded action
 		 */
 		public function plugins_loaded() {
-			
+
 			// Skip disable updates if a user is excluded
 			$disable_updates_skip = false;
 			if (current_user_can('update_plugins')) {
@@ -549,7 +661,7 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 			$get_plugins = get_plugins();
 
 			$active_plugins = $this->get_active_plugins();
-
+			$plugin_info = array();
 			$plugin_info['installed'] = false;
 			$plugin_info['active'] = false;
 
@@ -579,6 +691,20 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 
 			$this->register_template_directories();
 
+			// Check for WP Constants that disable updates and display a notice.
+			$upgrade_constants = MPSUM_Constant_Checks::get_instance();
+			if ($upgrade_constants->is_config_options_disabled()) {
+				$upgrade_constant_notice = get_site_option('easy_updates_manager_dismiss_constant_notices', 0);
+				if (!$upgrade_constant_notice) {
+					add_action('all_admin_notices', array($this, 'show_autoupdate_constant_warning'));
+				}
+			}
+
+			// Add filters to overwrite auto update UI in WP 5.5
+			add_filter('plugin_auto_update_setting_html', array($this, 'eum_plugin_auto_update_setting_html'), 10, 3);
+			add_filter('theme_auto_update_setting_html', array($this, 'eum_theme_auto_update_setting_html'), 10, 3);
+			add_filter('theme_auto_update_setting_template', array($this, 'eum_auto_update_setting_template'));
+
 			if ('index.php' != $pagenow) return;
 			if (current_user_can('update_plugins') || (defined('EASY_UPDATES_MANAGER_FORCE_DASHNOTICE') && EASY_UPDATES_MANAGER_FORCE_DASHNOTICE)) {
 				$dismissed_until = get_site_option('easy_updates_manager_dismiss_dash_notice_until', 0);
@@ -602,9 +728,147 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 				if (($installed && time() > $dismissed_until && $installed_for < (14 * 86400) && !defined('EASY_UPDATES_MANAGER_NOADS_B')) || (defined('EASY_UPDATES_MANAGER_FORCE_DASHNOTICE') && EASY_UPDATES_MANAGER_FORCE_DASHNOTICE)) {
 					add_action('all_admin_notices', array($this, 'show_admin_notice_upgraded'));
 				} else {
-					add_action('all_admin_notices', array($this->get_notices(), 'do_notice'));
+					$enable_notices = get_site_option('easy_updates_manager_enable_notices', 'on');
+					if ('on' === $enable_notices) {
+						add_action('all_admin_notices', array($this->get_notices(), 'do_notice'));
+					}
 				}
 			}
+		}
+
+		/**
+		 * This function will overwrite the default auto update UI on the plugins page in the WordPress dashboard in WordPress 5.5+, depending on the options setup in EUM will depend on the output
+		 *
+		 * @param string $html        - the HTML to filter
+		 * @param string $plugin_file - the plugin file the HTML is for
+		 * @return string - the filtered HTML auto update UI
+		 */
+		public function eum_plugin_auto_update_setting_html($html, $plugin_file) {
+			return $this->eum_entity_auto_update_setting_html($html, 'plugin', $plugin_file, false);
+		}
+
+		/**
+		 * This function will overwrite the default auto update UI on the themes page on a multisite in the WordPress dashboard in WordPress 5.5+, depending on the options setup in EUM will depend on the output
+		 *
+		 * @param string $html       - the HTML to filter
+		 * @param string $stylesheet - the theme file the HTML is for
+		 * @return string - the filtered HTML auto update UI
+		 */
+		public function eum_theme_auto_update_setting_html($html, $stylesheet) {
+			return $this->eum_entity_auto_update_setting_html($html, 'theme', $stylesheet, false);
+		}
+
+		/**
+		 * This function will overwrite the default auto update UI on the themes page for single sites in the WordPress dashboard in WordPress 5.5+ depending on the options setup in EUM will depend on the output
+		 *
+		 * @param string $template - the theme template
+		 *
+		 * @return string - returns a filtered theme template
+		 */
+		public function eum_auto_update_setting_template($template) {
+			return $this->eum_entity_auto_update_setting_html($template, 'theme', '', true);
+		}
+
+		/**
+		 * This function will overwrite the default auto update UI on the passed in entity page for single and multi sites in the WordPress dashboard in WordPress 5.5+ depending on the options setup in EUM will depend on the output
+		 *
+		 * @param string  $html        - the HTML to filter
+		 * @param string  $entity      - the entity type (theme/plugin)
+		 * @param string  $entity_file - the entity file the HTML is for
+		 * @param boolean $template    - if this should be returned in template format or not (single site themes currently uses this)
+		 *
+		 * @return string - returns a filtered HTML string or template
+		 */
+		private function eum_entity_auto_update_setting_html($html, $entity, $entity_file, $template) {
+			$entity_option = 'plugin' == $entity ? 'plugins' : 'themes';
+			$core_options = MPSUM_Updates_Manager::get_options('core');
+			$entity_options = MPSUM_Updates_Manager::get_options($entity_option);
+			$entity_automatic_options = MPSUM_Updates_Manager::get_options($entity_option.'_automatic');
+			$url = MPSUM_Admin::get_url();
+			
+			// Allow white-labelling
+			$eum_white_label = apply_filters('eum_whitelabel_name', __('Easy Updates Manager', 'stops-core-theme-and-plugin-updates'));
+
+			if (!isset($core_options['plugin_updates']) || !isset($core_options['theme_updates'])) {
+				$html = '<a href="'.$url.'">'.sprintf(__('Managed by %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+				return $html;
+			}
+
+			$updates = 'plugin' == $entity ? $core_options['plugin_updates'] : $core_options['theme_updates'];
+
+			if ('automatic' == $updates) {
+				$html = '<a href="'.$url.'">'.sprintf(__('Managed by %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+				if ($template) return $html;
+			} elseif ('on' == $updates) {
+				$html = '<a href="'.$url.'">'.sprintf(__('Managed by %s (%s).', 'stops-core-theme-and-plugin-updates'), $eum_white_label, __('on', 'stops-core-theme-and-plugin-updates')).'</a>';
+				if ($template) return $html;
+			} elseif ('off' == $updates) {
+				$html = '<a href="'.$url.'">'.sprintf(__('Disabled in %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+				if ($template) return $html;
+			} elseif ('automatic_off' == $updates) {
+				$html = '<a href="'.$url.'">'.sprintf(__('Disabled in %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+				if ($template) return $html;
+			} elseif ('individual' == $updates && !$template) {
+				
+				$html = '<a href="'.$url.'">'.sprintf(__('Managed by %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+
+				if (!empty($entity_options)) {
+					foreach ($entity_options as $ent) {
+						if ($ent == $entity_file) $html = '<a href="'.$url.'">'.sprintf(__('Disabled in %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+					}
+				}
+
+				if (!empty($entity_automatic_options)) {
+					foreach ($entity_automatic_options as $ent) {
+						if ($ent == $entity_file) $html = '<a href="'.$url.'">'.sprintf(__('Managed by %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+					}
+				}
+			} elseif ('individual' == $updates && $template) {
+				
+				$entity_options_string = '';
+				$entity_automatic_options_string = '';
+				$entity_options_html = '';
+				$entity_automatic_options_html = '';
+
+				if (!empty($entity_options)) {
+					$last = count($entity_options) - 1;
+					foreach ($entity_options as $key => $ent) {
+						$entity_options_string .= "'".$ent."'";
+						if ($last != $key) $entity_options_string .= ',';
+					}
+					$entity_options_html = '<a href="'.$url.'">'.sprintf(__('Disabled in %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+				}
+
+				if (!empty($entity_automatic_options)) {
+					$last = count($entity_automatic_options) - 1;
+					foreach ($entity_automatic_options as $key => $theme) {
+						$entity_automatic_options_string .= "'".$theme."'";
+						if ($last != $key) $entity_automatic_options_string .= ',';
+					}
+					$entity_automatic_options_html = '<a href="'.$url.'">'.sprintf(__('Managed by %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+				}
+
+				$entity_not_set_html = '<a href="'.$url.'">'.sprintf(__('Managed by %s.', 'stops-core-theme-and-plugin-updates'), $eum_white_label).'</a>';
+
+				return "<# if ([".$entity_options_string."].includes(data.id)) { #>
+					$entity_options_html
+				<# } else if ([".$entity_automatic_options_string."].includes(data.id)) { #>
+					$entity_automatic_options_html
+				<# } else { #>
+					$entity_not_set_html
+				<# } #>";
+			}
+
+			return apply_filters('eum_entity_auto_update_setting_html', $html, $entity);
+		}
+		
+		/**
+		 * Display Constant Warnings
+		 *
+		 * @return void
+		 */
+		public function show_autoupdate_constant_warning() {
+			$this->include_template('notices/dashboard-constant-warning.php');
 		}
 		/**
 		 * Display welcome dashboard
@@ -651,7 +915,6 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 			if (!wp_verify_nonce($nonce, 'easy-updates-manager-ajax-nonce') || empty($_POST['subaction'])) die('Security check');
 
 			$subaction = $_POST['subaction'];
-			$data = isset($_POST['data']) ? $_POST['data'] : null;
 
 			if (!current_user_can($this->capability_required())) die('Security check');
 
@@ -668,6 +931,8 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 				update_site_option('easy_updates_manager_dismiss_season_notice_until', (time() + 84 * 86400));
 			} elseif ('dismiss_survey_notice_until' == $subaction) {
 				update_site_option('easy_updates_manager_dismiss_survey_notice_until', (time() + 366 * 86400));
+			} elseif ('dismiss_constant_notices' == $subaction) {
+				update_site_option('easy_updates_manager_dismiss_constant_notices', true);
 			}
 
 			wp_send_json($results);
@@ -723,9 +988,8 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 				echo __('Error:', 'stops-core-theme-and-plugin-updates').' '.__('template not found', 'stops-core-theme-and-plugin-updates')." (".$path.")";
 			} else {
 				extract($extract_these);
-				$wpdb = $GLOBALS['wpdb'];
-				$easy_updates_manager = $this;
-				$easy_updates_manager_notices = $this->get_notices();
+				$easy_updates_manager = $this; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is used in the template file
+				$easy_updates_manager_notices = $this->get_notices();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- This is used in the template file
 				include $template_file;
 			}
 
@@ -807,7 +1071,7 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 			include ABSPATH.WPINC.'/version.php';
 			$this->show_admin_warning(
 				__('Higher WordPress version required', 'stops-core-theme-and-plugin-updates'),
-				sprintf(__('The %s plugin requires %s version %s or higher - your current version is only %s.', 'stops-core-theme-and-plugin-updates'), 'Easy Updates Manager', 'WordPress', self::WP_REQUIRED, $wp_version),
+				sprintf(__('The %s plugin requires %s version %s or higher - your current version is only %s.', 'stops-core-theme-and-plugin-updates'), 'Easy Updates Manager', 'WordPress', self::WP_REQUIRED, $wp_version), // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
 				'notice-error'
 			);
 		}
@@ -819,7 +1083,7 @@ if (!class_exists('MPSUM_Updates_Manager')) {
 		 * @param string $message Warning message in detail
 		 * @param string $class   Style class name for warning
 		 */
-		private function show_admin_warning($title = "", $message, $class = 'notice-error') {
+		private function show_admin_warning($title, $message, $class = 'notice-error') {
 			?>
 			<div class="notice is-dismissible <?php echo $class; ?>">
 				<p>

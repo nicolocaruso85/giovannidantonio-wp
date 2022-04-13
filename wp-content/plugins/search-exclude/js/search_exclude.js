@@ -22,7 +22,7 @@
     }
   };
 
-  $('#bulk_edit').live( 'click', function() {
+  $('body').on( 'click', '#bulk_edit', function() {
     // define the bulk edit row
     var $bulk_row = $( '#bulk-edit' );
 
@@ -35,6 +35,9 @@
     // get the search exclude value
     var $exclude = $bulk_row.find('select[name="sep[exclude]"]').val();
 
+    var nonce = $bulk_row.find('input[name="_wpnonce_search_exclude_bulk_edit"]').val();
+    var referer = $bulk_row.find('input[name="_wp_http_referer"]').val();
+
     // save the data
     $.ajax({
       url: ajaxurl,
@@ -44,7 +47,9 @@
       data: {
         action: 'search_exclude_save_bulk_edit',
         post_ids: $post_ids,
-        sep_exclude: $exclude
+        sep_exclude: $exclude,
+        _wpnonce_search_exclude_bulk_edit: nonce,
+        _wp_http_referer: referer
       }
     });
   });

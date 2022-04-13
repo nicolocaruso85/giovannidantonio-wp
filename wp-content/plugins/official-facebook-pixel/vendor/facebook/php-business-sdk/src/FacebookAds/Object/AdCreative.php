@@ -72,10 +72,10 @@ class AdCreative extends AbstractCrudObject {
 
   protected static function getReferencedEnums() {
     $ref_enums = array();
-    $ref_enums['ApplinkTreatment'] = AdCreativeApplinkTreatmentValues::getInstance()->getValues();
     $ref_enums['CallToActionType'] = AdCreativeCallToActionTypeValues::getInstance()->getValues();
     $ref_enums['ObjectType'] = AdCreativeObjectTypeValues::getInstance()->getValues();
     $ref_enums['Status'] = AdCreativeStatusValues::getInstance()->getValues();
+    $ref_enums['ApplinkTreatment'] = AdCreativeApplinkTreatmentValues::getInstance()->getValues();
     $ref_enums['AuthorizationCategory'] = AdCreativeAuthorizationCategoryValues::getInstance()->getValues();
     $ref_enums['CategorizationCriteria'] = AdCreativeCategorizationCriteriaValues::getInstance()->getValues();
     $ref_enums['CategoryMediaSource'] = AdCreativeCategoryMediaSourceValues::getInstance()->getValues();
@@ -89,30 +89,6 @@ class AdCreative extends AbstractCrudObject {
     if (array_key_exists('id', $data)) {
       $this->data['creative_id'] = $data['id'];
     }
-  }
-
-  public function deleteAdLabels(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'adlabels' => 'list<Object>',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/adlabels',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
   }
 
   public function createAdLabel(array $fields = array(), array $params = array(), $pending = false) {

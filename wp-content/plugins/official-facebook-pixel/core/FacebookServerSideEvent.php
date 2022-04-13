@@ -21,34 +21,65 @@ use FacebookAds\Api;
 use FacebookAds\Object\ServerSide\Event;
 use FacebookAds\Object\ServerSide\EventRequest;
 use FacebookAds\Object\ServerSide\UserData;
+use FacebookAds\Exception\Exception;
 
 defined('ABSPATH') or die('Direct access not allowed');
 
 class FacebookServerSideEvent {
   private static $instance = null;
-  private $tracked_events = [];
+  // Contains all the events triggered during the request
+  private $trackedEvents = [];
+  // Contains all Conversions API events that have not been sent
+  private $pendingEvents = [];
+  // Maps a callback name with a Conversions API event
+  // that hasn't been rendered as pixel event
+  private $pendingPixelEvents = [];
 
   public static function getInstance() {
     if (self::$instance == null) {
       self::$instance = new FacebookServerSideEvent();
     }
-
     return self::$instance;
   }
 
-  public function track($event) {
-    $this->tracked_events[] = $event;
-
-    if (FacebookWordpressOptions::getUseS2S()) {
-      do_action('send_server_event', $event);
+  public function track($event, $sendNow = true) {
+    $this->trackedEvents[] = $event;
+    if( $sendNow ){
+      do_action( 'send_server_events',
+        array($event),
+        1
+      );
+    }
+    else{
+      $this->pendingEvents[] = $event;
     }
   }
 
   public function getTrackedEvents() {
-    return $this->tracked_events;
+    return $this->trackedEvents;
+  }
+
+  public function getNumTrackedEvents(){
+    return count( $this->trackedEvents );
+  }
+
+  public function getPendingEvents(){
+    return $this->pendingEvents;
+  }
+
+  public function setPendingPixelEvent($callback_name, $event){
+    $this->pendingPixelEvents[$callback_name] = $event;
+  }
+
+  public function getPendingPixelEvent($callback_name){
+    if(array_key_exists($callback_name, $this->pendingPixelEvents)){
+      return $this->pendingPixelEvents[$callback_name];
+    }
+    return null;
   }
 
   public static function send($events) {
+    $events = apply_filters('before_conversions_api_event_sent', $events);
     if (empty($events)) {
       return;
     }
@@ -57,12 +88,19 @@ class FacebookServerSideEvent {
     $access_token = FacebookWordpressOptions::getAccessToken();
     $agent = FacebookWordpressOptions::getAgentString();
 
-    $api = Api::init(null, null, $access_token);
+    if(empty($pixel_id) || empty($access_token)){
+      return;
+    }
+    try{
+      $api = Api::init(null, null, $access_token);
 
-    $request = (new EventRequest($pixel_id))
-                   ->setEvents($events)
-                   ->setPartnerAgent($agent);
+      $request = (new EventRequest($pixel_id))
+                  ->setEvents($events)
+                  ->setPartnerAgent($agent);
 
-    $response = $request->execute();
+      $response = $request->execute();
+    } catch (Exception $e) {
+      error_log(json_encode($e));
+    }
   }
 }

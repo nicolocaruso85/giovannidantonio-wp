@@ -31,13 +31,14 @@ use FacebookAds\TypeChecker;
 use FacebookAds\Object\Fields\AdAccountFields;
 use FacebookAds\Object\Values\AdAccountAdRulesHistoryActionValues;
 use FacebookAds\Object\Values\AdAccountAdRulesHistoryEvaluationTypeValues;
+use FacebookAds\Object\Values\AdAccountAdVolumeRecommendationTypeValues;
 use FacebookAds\Object\Values\AdAccountClaimObjectiveValues;
 use FacebookAds\Object\Values\AdAccountContentTypeValues;
 use FacebookAds\Object\Values\AdAccountCurrencyValues;
 use FacebookAds\Object\Values\AdAccountDeliveryEstimateOptimizationGoalValues;
 use FacebookAds\Object\Values\AdAccountMatchedSearchApplicationsEdgeDataAppStoreValues;
-use FacebookAds\Object\Values\AdAccountPermittedTasksValues;
 use FacebookAds\Object\Values\AdAccountSubtypeValues;
+use FacebookAds\Object\Values\AdAccountTargetingUnifiedAppStoreValues;
 use FacebookAds\Object\Values\AdAccountTargetingUnifiedLimitTypeValues;
 use FacebookAds\Object\Values\AdAccountTargetingUnifiedModeValues;
 use FacebookAds\Object\Values\AdAccountTargetingUnifiedObjectiveValues;
@@ -45,6 +46,7 @@ use FacebookAds\Object\Values\AdAccountTargetingUnifiedRegulatedCategoriesValues
 use FacebookAds\Object\Values\AdAccountTargetingUnifiedWhitelistedTypesValues;
 use FacebookAds\Object\Values\AdAccountTasksValues;
 use FacebookAds\Object\Values\AdActivityCategoryValues;
+use FacebookAds\Object\Values\AdActivityDataSourceValues;
 use FacebookAds\Object\Values\AdAsyncRequestSetNotificationModeValues;
 use FacebookAds\Object\Values\AdCreativeApplinkTreatmentValues;
 use FacebookAds\Object\Values\AdCreativeAuthorizationCategoryValues;
@@ -56,6 +58,7 @@ use FacebookAds\Object\Values\AdCreativeOperatorValues;
 use FacebookAds\Object\Values\AdDatePresetValues;
 use FacebookAds\Object\Values\AdExecutionOptionsValues;
 use FacebookAds\Object\Values\AdOperatorValues;
+use FacebookAds\Object\Values\AdPlacePageSetCategoryValues;
 use FacebookAds\Object\Values\AdPlacePageSetLocationTypesValues;
 use FacebookAds\Object\Values\AdPlacePageSetTargetedAreaTypeValues;
 use FacebookAds\Object\Values\AdPreviewAdFormatValues;
@@ -68,6 +71,7 @@ use FacebookAds\Object\Values\AdSetDestinationTypeValues;
 use FacebookAds\Object\Values\AdSetEffectiveStatusValues;
 use FacebookAds\Object\Values\AdSetExecutionOptionsValues;
 use FacebookAds\Object\Values\AdSetFullFunnelExplorationModeValues;
+use FacebookAds\Object\Values\AdSetMultiOptimizationGoalWeightValues;
 use FacebookAds\Object\Values\AdSetOperatorValues;
 use FacebookAds\Object\Values\AdSetOptimizationGoalValues;
 use FacebookAds\Object\Values\AdSetOptimizationSubEventValues;
@@ -98,7 +102,9 @@ use FacebookAds\Object\Values\CampaignEffectiveStatusValues;
 use FacebookAds\Object\Values\CampaignExecutionOptionsValues;
 use FacebookAds\Object\Values\CampaignObjectiveValues;
 use FacebookAds\Object\Values\CampaignOperatorValues;
-use FacebookAds\Object\Values\CampaignSpecialAdCategoryValues;
+use FacebookAds\Object\Values\CampaignSmartPromotionTypeValues;
+use FacebookAds\Object\Values\CampaignSpecialAdCategoriesValues;
+use FacebookAds\Object\Values\CampaignSpecialAdCategoryCountryValues;
 use FacebookAds\Object\Values\CampaignStatusValues;
 use FacebookAds\Object\Values\ContentDeliveryReportPlatformValues;
 use FacebookAds\Object\Values\ContentDeliveryReportPositionValues;
@@ -139,7 +145,6 @@ class AdAccount extends AbstractCrudObject {
   protected static function getReferencedEnums() {
     $ref_enums = array();
     $ref_enums['Currency'] = AdAccountCurrencyValues::getInstance()->getValues();
-    $ref_enums['PermittedTasks'] = AdAccountPermittedTasksValues::getInstance()->getValues();
     $ref_enums['Tasks'] = AdAccountTasksValues::getInstance()->getValues();
     $ref_enums['ClaimObjective'] = AdAccountClaimObjectiveValues::getInstance()->getValues();
     $ref_enums['ContentType'] = AdAccountContentTypeValues::getInstance()->getValues();
@@ -156,6 +161,7 @@ class AdAccount extends AbstractCrudObject {
       'after' => 'string',
       'business_id' => 'string',
       'category' => 'category_enum',
+      'data_source' => 'data_source_enum',
       'extra_oids' => 'list<string>',
       'limit' => 'int',
       'oid' => 'string',
@@ -165,6 +171,7 @@ class AdAccount extends AbstractCrudObject {
     );
     $enums = array(
       'category_enum' => AdActivityCategoryValues::getInstance()->getValues(),
+      'data_source_enum' => AdActivityDataSourceValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(
@@ -209,12 +216,14 @@ class AdAccount extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'category' => 'category_enum',
       'location_types' => 'list<location_types_enum>',
       'name' => 'string',
       'parent_page' => 'string',
       'targeted_area_type' => 'targeted_area_type_enum',
     );
     $enums = array(
+      'category_enum' => AdPlacePageSetCategoryValues::getInstance()->getValues(),
       'location_types_enum' => AdPlacePageSetLocationTypesValues::getInstance()->getValues(),
       'targeted_area_type_enum' => AdPlacePageSetTargetedAreaTypeValues::getInstance()->getValues(),
     );
@@ -238,12 +247,14 @@ class AdAccount extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'category' => 'category_enum',
       'location_types' => 'list<location_types_enum>',
       'name' => 'string',
       'parent_page' => 'string',
       'targeted_area_type' => 'targeted_area_type_enum',
     );
     $enums = array(
+      'category_enum' => AdPlacePageSetCategoryValues::getInstance()->getValues(),
       'location_types_enum' => AdPlacePageSetLocationTypesValues::getInstance()->getValues(),
       'targeted_area_type_enum' => AdPlacePageSetTargetedAreaTypeValues::getInstance()->getValues(),
     );
@@ -263,28 +274,20 @@ class AdAccount extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function deleteAdSets(array $fields = array(), array $params = array(), $pending = false) {
+  public function getAdSavedKeywords(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
     $param_types = array(
-      'before_date' => 'datetime',
-      'delete_offset' => 'unsigned int',
-      'delete_strategy' => 'delete_strategy_enum',
-      'object_count' => 'int',
+      'fields' => 'list<string>',
     );
     $enums = array(
-      'delete_strategy_enum' => array(
-        'DELETE_ANY',
-        'DELETE_ARCHIVED_BEFORE',
-        'DELETE_OLDEST',
-      ),
     );
 
     $request = new ApiRequest(
       $this->api,
       $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/ad_sets',
+      RequestInterface::METHOD_GET,
+      '/ad_saved_keywords',
       new AbstractCrudObject(),
       'EDGE',
       array(),
@@ -311,6 +314,29 @@ class AdAccount extends AbstractCrudObject {
       new AdStudy(),
       'EDGE',
       AdStudy::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
+  public function getAdCloudPlayables(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_GET,
+      '/adcloudplayables',
+      new AbstractCrudObject(),
+      'EDGE',
+      array(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -365,6 +391,7 @@ class AdAccount extends AbstractCrudObject {
       'image_url' => 'string',
       'instagram_actor_id' => 'string',
       'instagram_permalink_url' => 'string',
+      'instagram_user_id' => 'string',
       'instant_checkout_setting' => 'instant_checkout_setting_enum',
       'interactive_components_spec' => 'map',
       'is_dco_internal' => 'bool',
@@ -377,11 +404,13 @@ class AdAccount extends AbstractCrudObject {
       'object_story_spec' => 'AdCreativeObjectStorySpec',
       'object_type' => 'string',
       'object_url' => 'string',
+      'place_page_set_id' => 'string',
       'platform_customizations' => 'Object',
       'playable_asset_id' => 'string',
       'portrait_customizations' => 'map',
       'product_set_id' => 'string',
       'recommender_settings' => 'map',
+      'source_instagram_media_id' => 'string',
       'template_url' => 'string',
       'template_url_spec' => 'Object',
       'thumbnail_url' => 'string',
@@ -595,6 +624,7 @@ class AdAccount extends AbstractCrudObject {
     $param_types = array(
       'app_id' => 'string',
       'name' => 'string',
+      'session_id' => 'string',
       'source' => 'file',
       'source_url' => 'string',
       'source_zip' => 'file',
@@ -610,29 +640,6 @@ class AdAccount extends AbstractCrudObject {
       new PlayableContent(),
       'EDGE',
       PlayableContent::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function getAdReportSchedules(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/adreportschedules',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -726,13 +733,10 @@ class AdAccount extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'ad_draft_id' => 'string',
       'date_preset' => 'date_preset_enum',
       'effective_status' => 'list<string>',
-      'include_drafts' => 'bool',
       'time_range' => 'Object',
       'updated_since' => 'int',
-      'use_employee_draft' => 'bool',
     );
     $enums = array(
       'date_preset_enum' => AdDatePresetValues::getInstance()->getValues(),
@@ -762,6 +766,7 @@ class AdAccount extends AbstractCrudObject {
       'adset_spec' => 'AdSet',
       'audience_id' => 'string',
       'bid_amount' => 'int',
+      'conversion_domain' => 'string',
       'creative' => 'AdCreative',
       'date_format' => 'string',
       'display_sequence' => 'unsigned int',
@@ -801,9 +806,11 @@ class AdAccount extends AbstractCrudObject {
 
     $param_types = array(
       'page_id' => 'int',
+      'recommendation_type' => 'recommendation_type_enum',
       'show_breakdown_by_actor' => 'bool',
     );
     $enums = array(
+      'recommendation_type_enum' => AdAccountAdVolumeRecommendationTypeValues::getInstance()->getValues(),
     );
 
     $request = new ApiRequest(
@@ -851,13 +858,10 @@ class AdAccount extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'ad_draft_id' => 'string',
       'date_preset' => 'date_preset_enum',
       'effective_status' => 'list<effective_status_enum>',
-      'include_drafts' => 'bool',
       'is_completed' => 'bool',
       'time_range' => 'Object',
-      'use_employee_draft' => 'bool',
     );
     $enums = array(
       'date_preset_enum' => AdSetDatePresetValues::getInstance()->getValues(),
@@ -910,6 +914,7 @@ class AdAccount extends AbstractCrudObject {
       'lifetime_min_spend_target' => 'unsigned int',
       'lifetime_spend_cap' => 'unsigned int',
       'line_number' => 'unsigned int',
+      'multi_optimization_goal_weight' => 'multi_optimization_goal_weight_enum',
       'name' => 'string',
       'optimization_goal' => 'optimization_goal_enum',
       'optimization_sub_event' => 'optimization_sub_event_enum',
@@ -935,6 +940,7 @@ class AdAccount extends AbstractCrudObject {
       'destination_type_enum' => AdSetDestinationTypeValues::getInstance()->getValues(),
       'execution_options_enum' => AdSetExecutionOptionsValues::getInstance()->getValues(),
       'full_funnel_exploration_mode_enum' => AdSetFullFunnelExplorationModeValues::getInstance()->getValues(),
+      'multi_optimization_goal_weight_enum' => AdSetMultiOptimizationGoalWeightValues::getInstance()->getValues(),
       'optimization_goal_enum' => AdSetOptimizationGoalValues::getInstance()->getValues(),
       'optimization_sub_event_enum' => AdSetOptimizationSubEventValues::getInstance()->getValues(),
       'status_enum' => AdSetStatusValues::getInstance()->getValues(),
@@ -1120,7 +1126,6 @@ class AdAccount extends AbstractCrudObject {
       'animated_effect_id' => 'unsigned int',
       'application_id' => 'string',
       'asked_fun_fact_prompt_id' => 'unsigned int',
-      'attribution_app_id' => 'string',
       'audio_story_wave_animation_handle' => 'string',
       'chunk_session_id' => 'string',
       'composer_entry_picker' => 'string',
@@ -1132,6 +1137,7 @@ class AdAccount extends AbstractCrudObject {
       'composer_type' => 'string',
       'container_type' => 'container_type_enum',
       'content_category' => 'content_category_enum',
+      'creative_tools' => 'string',
       'description' => 'string',
       'embeddable' => 'bool',
       'end_offset' => 'unsigned int',
@@ -1171,6 +1177,7 @@ class AdAccount extends AbstractCrudObject {
       'sales_promo_id' => 'unsigned int',
       'slideshow_spec' => 'map',
       'source' => 'file',
+      'source_instagram_media_id' => 'string',
       'spherical' => 'bool',
       'start_offset' => 'unsigned int',
       'swap_mode' => 'swap_mode_enum',
@@ -1185,6 +1192,7 @@ class AdAccount extends AbstractCrudObject {
       'upload_session_id' => 'string',
       'upload_setting_properties' => 'string',
       'video_file_chunk' => 'file',
+      'video_id_original' => 'string',
       'video_start_time_ms' => 'unsigned int',
       'waterfall_id' => 'string',
     );
@@ -1278,32 +1286,6 @@ class AdAccount extends AbstractCrudObject {
       new Business(),
       'EDGE',
       Business::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function createAgency(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'business' => 'string',
-      'permitted_tasks' => 'list<permitted_tasks_enum>',
-    );
-    $enums = array(
-      'permitted_tasks_enum' => AdAccountPermittedTasksValues::getInstance()->getValues(),
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/agencies',
-      new AdAccount(),
-      'EDGE',
-      AdAccount::getFieldsEnum()->getValues(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -1512,31 +1494,6 @@ class AdAccount extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function createAudienceReplace(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'payload' => 'Object',
-      'session' => 'Object',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/audiencereplace',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function createBlockListDraft(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -1623,10 +1580,8 @@ class AdAccount extends AbstractCrudObject {
     $param_types = array(
       'date_preset' => 'date_preset_enum',
       'effective_status' => 'list<effective_status_enum>',
-      'include_drafts' => 'bool',
       'is_completed' => 'bool',
       'time_range' => 'Object',
-      'use_employee_draft' => 'bool',
     );
     $enums = array(
       'date_preset_enum' => CampaignDatePresetValues::getInstance()->getValues(),
@@ -1654,20 +1609,24 @@ class AdAccount extends AbstractCrudObject {
     $param_types = array(
       'adlabels' => 'list<Object>',
       'bid_strategy' => 'bid_strategy_enum',
-      'budget_rebalance_flag' => 'bool',
       'buying_type' => 'string',
       'daily_budget' => 'unsigned int',
       'execution_options' => 'list<execution_options_enum>',
+      'is_skadnetwork_attribution' => 'bool',
       'iterative_split_test_configs' => 'list<Object>',
       'lifetime_budget' => 'unsigned int',
       'name' => 'string',
       'objective' => 'objective_enum',
       'pacing_type' => 'list<string>',
       'promoted_object' => 'Object',
+      'smart_promotion_type' => 'smart_promotion_type_enum',
       'source_campaign_id' => 'string',
-      'special_ad_category' => 'special_ad_category_enum',
+      'special_ad_categories' => 'list<special_ad_categories_enum>',
+      'special_ad_category_country' => 'list<special_ad_category_country_enum>',
       'spend_cap' => 'unsigned int',
+      'start_time' => 'datetime',
       'status' => 'status_enum',
+      'stop_time' => 'datetime',
       'topline_id' => 'string',
       'upstream_events' => 'map',
     );
@@ -1675,7 +1634,9 @@ class AdAccount extends AbstractCrudObject {
       'bid_strategy_enum' => CampaignBidStrategyValues::getInstance()->getValues(),
       'execution_options_enum' => CampaignExecutionOptionsValues::getInstance()->getValues(),
       'objective_enum' => CampaignObjectiveValues::getInstance()->getValues(),
-      'special_ad_category_enum' => CampaignSpecialAdCategoryValues::getInstance()->getValues(),
+      'smart_promotion_type_enum' => CampaignSmartPromotionTypeValues::getInstance()->getValues(),
+      'special_ad_categories_enum' => CampaignSpecialAdCategoriesValues::getInstance()->getValues(),
+      'special_ad_category_country_enum' => CampaignSpecialAdCategoryCountryValues::getInstance()->getValues(),
       'status_enum' => CampaignStatusValues::getInstance()->getValues(),
     );
 
@@ -1720,6 +1681,29 @@ class AdAccount extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
+  public function getConnectedInstagramAccounts(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_GET,
+      '/connected_instagram_accounts',
+      new IGUser(),
+      'EDGE',
+      IGUser::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
   public function getContentDeliveryReport(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -1744,6 +1728,32 @@ class AdAccount extends AbstractCrudObject {
       new ContentDeliveryReport(),
       'EDGE',
       ContentDeliveryReport::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
+  public function createCreateAndApplyPublisherBlockList(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+      'is_auto_blocking_on' => 'bool',
+      'name' => 'string',
+      'publisher_urls' => 'list<string>',
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_POST,
+      '/create_and_apply_publisher_block_list',
+      new AbstractCrudObject(),
+      'EDGE',
+      array(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -1782,8 +1792,6 @@ class AdAccount extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
-      'accountID' => 'string',
-      'additionalMetadata' => 'string',
       'allowed_domains' => 'list<string>',
       'associated_audience_id' => 'unsigned int',
       'claim_objective' => 'claim_objective_enum',
@@ -1793,28 +1801,19 @@ class AdAccount extends AbstractCrudObject {
       'customer_file_source' => 'customer_file_source_enum',
       'dataset_id' => 'string',
       'description' => 'string',
-      'details' => 'string',
       'enable_fetch_or_create' => 'bool',
       'event_source_group' => 'string',
       'event_sources' => 'list<map>',
       'exclusions' => 'list<Object>',
-      'expectedSize' => 'unsigned int',
-      'gender' => 'string',
       'inclusions' => 'list<Object>',
-      'isPrivate' => 'bool',
-      'is_household' => 'bool',
-      'is_household_exclusion' => 'bool',
       'is_snapshot' => 'bool',
       'is_value_based' => 'bool',
       'list_of_accounts' => 'list<unsigned int>',
       'lookalike_spec' => 'string',
-      'maxAge' => 'unsigned int',
-      'minAge' => 'unsigned int',
       'name' => 'string',
       'opt_out_link' => 'string',
       'origin_audience_id' => 'string',
       'parent_audience_id' => 'unsigned int',
-      'partnerID' => 'string',
       'partner_reference_key' => 'string',
       'pixel_id' => 'string',
       'prefill' => 'bool',
@@ -1824,10 +1823,7 @@ class AdAccount extends AbstractCrudObject {
       'rev_share_policy_id' => 'unsigned int',
       'rule' => 'string',
       'rule_aggregation' => 'string',
-      'seed_audience' => 'unsigned int',
-      'source' => 'string',
       'subtype' => 'subtype_enum',
-      'tags' => 'list<string>',
       'video_group_ids' => 'list<string>',
     );
     $enums = array(
@@ -2091,6 +2087,7 @@ class AdAccount extends AbstractCrudObject {
       'time_range' => 'Object',
       'time_ranges' => 'list<Object>',
       'use_account_attribution_setting' => 'bool',
+      'use_unified_attribution_setting' => 'bool',
     );
     $enums = array(
       'action_attribution_windows_enum' => AdsInsightsActionAttributionWindowsValues::getInstance()->getValues(),
@@ -2141,6 +2138,7 @@ class AdAccount extends AbstractCrudObject {
       'time_range' => 'Object',
       'time_ranges' => 'list<Object>',
       'use_account_attribution_setting' => 'bool',
+      'use_unified_attribution_setting' => 'bool',
     );
     $enums = array(
       'action_attribution_windows_enum' => AdsInsightsActionAttributionWindowsValues::getInstance()->getValues(),
@@ -2190,6 +2188,30 @@ class AdAccount extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
+  public function getIosFourteenCampaignLimits(array $fields = array(), array $params = array(), $pending = false) {
+    $this->assureId();
+
+    $param_types = array(
+      'app_id' => 'string',
+    );
+    $enums = array(
+    );
+
+    $request = new ApiRequest(
+      $this->api,
+      $this->data['id'],
+      RequestInterface::METHOD_GET,
+      '/ios_fourteen_campaign_limits',
+      new AdAccountIosFourteenCampaignLimits(),
+      'EDGE',
+      AdAccountIosFourteenCampaignLimits::getFieldsEnum()->getValues(),
+      new TypeChecker($param_types, $enums)
+    );
+    $request->addParams($params);
+    $request->addFields($fields);
+    return $pending ? $request : $request->execute();
+  }
+
   public function getMatchedSearchApplications(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -2198,6 +2220,8 @@ class AdAccount extends AbstractCrudObject {
       'app_store' => 'app_store_enum',
       'app_store_country' => 'string',
       'business_id' => 'string',
+      'is_skadnetwork_search' => 'bool',
+      'only_apps_with_permission' => 'bool',
       'query_term' => 'string',
     );
     $enums = array(
@@ -2329,8 +2353,6 @@ class AdAccount extends AbstractCrudObject {
       'event_sources' => 'list<map>',
       'exclusions' => 'list<Object>',
       'inclusions' => 'list<Object>',
-      'is_household' => 'bool',
-      'is_household_exclusion' => 'bool',
       'is_snapshot' => 'bool',
       'is_value_based' => 'bool',
       'name' => 'string',
@@ -2338,9 +2360,7 @@ class AdAccount extends AbstractCrudObject {
       'parent_audience_id' => 'unsigned int',
       'product_set_id' => 'string',
       'rev_share_policy_id' => 'unsigned int',
-      'seed_audience' => 'unsigned int',
       'subtype' => 'subtype_enum',
-      'tags' => 'list<string>',
     );
     $enums = array(
       'claim_objective_enum' => AdAccountClaimObjectiveValues::getInstance()->getValues(),
@@ -2550,33 +2570,6 @@ class AdAccount extends AbstractCrudObject {
     return $pending ? $request : $request->execute();
   }
 
-  public function getRoas(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'fields' => 'list<string>',
-      'filtering' => 'list<Object>',
-      'time_increment' => 'string',
-      'time_range' => 'Object',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_GET,
-      '/roas',
-      new AdAccountRoas(),
-      'EDGE',
-      AdAccountRoas::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
   public function getSavedAudiences(array $fields = array(), array $params = array(), $pending = false) {
     $this->assureId();
 
@@ -2596,33 +2589,6 @@ class AdAccount extends AbstractCrudObject {
       new SavedAudience(),
       'EDGE',
       SavedAudience::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function createSponsoredMessageAd(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'bid_amount' => 'int',
-      'daily_budget' => 'unsigned int',
-      'message_creative_id' => 'string',
-      'targeting' => 'Targeting',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_POST,
-      '/sponsored_message_ads',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);
@@ -2738,9 +2704,12 @@ class AdAccount extends AbstractCrudObject {
 
     $param_types = array(
       'allow_only_fat_head_interests' => 'bool',
+      'app_store' => 'app_store_enum',
       'countries' => 'list<string>',
       'is_exclusion' => 'bool',
       'limit_type' => 'limit_type_enum',
+      'objective' => 'objective_enum',
+      'promoted_object' => 'Object',
       'q' => 'string',
       'regulated_categories' => 'list<regulated_categories_enum>',
       'session_id' => 'unsigned int',
@@ -2748,7 +2717,9 @@ class AdAccount extends AbstractCrudObject {
       'whitelisted_types' => 'list<whitelisted_types_enum>',
     );
     $enums = array(
+      'app_store_enum' => AdAccountTargetingUnifiedAppStoreValues::getInstance()->getValues(),
       'limit_type_enum' => AdAccountTargetingUnifiedLimitTypeValues::getInstance()->getValues(),
+      'objective_enum' => AdAccountTargetingUnifiedObjectiveValues::getInstance()->getValues(),
       'regulated_categories_enum' => AdAccountTargetingUnifiedRegulatedCategoriesValues::getInstance()->getValues(),
       'whitelisted_types_enum' => AdAccountTargetingUnifiedWhitelistedTypesValues::getInstance()->getValues(),
     );
@@ -2799,6 +2770,7 @@ class AdAccount extends AbstractCrudObject {
     $this->assureId();
 
     $param_types = array(
+      'app_store' => 'app_store_enum',
       'countries' => 'list<string>',
       'limit_type' => 'limit_type_enum',
       'mode' => 'mode_enum',
@@ -2810,6 +2782,7 @@ class AdAccount extends AbstractCrudObject {
       'whitelisted_types' => 'list<whitelisted_types_enum>',
     );
     $enums = array(
+      'app_store_enum' => AdAccountTargetingUnifiedAppStoreValues::getInstance()->getValues(),
       'limit_type_enum' => AdAccountTargetingUnifiedLimitTypeValues::getInstance()->getValues(),
       'mode_enum' => AdAccountTargetingUnifiedModeValues::getInstance()->getValues(),
       'objective_enum' => AdAccountTargetingUnifiedObjectiveValues::getInstance()->getValues(),
@@ -2852,30 +2825,6 @@ class AdAccount extends AbstractCrudObject {
       new AdAccountTargetingUnified(),
       'EDGE',
       AdAccountTargetingUnified::getFieldsEnum()->getValues(),
-      new TypeChecker($param_types, $enums)
-    );
-    $request->addParams($params);
-    $request->addFields($fields);
-    return $pending ? $request : $request->execute();
-  }
-
-  public function deleteTracking(array $fields = array(), array $params = array(), $pending = false) {
-    $this->assureId();
-
-    $param_types = array(
-      'tracking_specs' => 'Object',
-    );
-    $enums = array(
-    );
-
-    $request = new ApiRequest(
-      $this->api,
-      $this->data['id'],
-      RequestInterface::METHOD_DELETE,
-      '/tracking',
-      new AbstractCrudObject(),
-      'EDGE',
-      array(),
       new TypeChecker($param_types, $enums)
     );
     $request->addParams($params);

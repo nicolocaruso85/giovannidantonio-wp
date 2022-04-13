@@ -1,9 +1,9 @@
 === Ultimate Category Excluder ===
 Contributors: Marios Alexandrou
-Donate link: http://infolific.com/technology/software-worth-using/ultimate-category-excluder/
+Donate link: https://infolific.com/technology/software-worth-using/ultimate-category-excluder/
 Tags: category, categories, exclude, exclude category, exclude categories, visible, hidden, hide, invisible, remove
-Requires at least: 4.0
-Tested up to: 4.7
+Requires at least: 5.0
+Tested up to: 5.9
 License: GPLv2 or later
 
 Ultimate Category Excluder allows you to quickly and easily exclude categories from your front page, archives, feeds, and search results.
@@ -17,7 +17,7 @@ Ultimate Category Excluder, abbreviated as UCE, is a WordPress plugin that allow
 1. Download Ultimate Category Excluder.
 2. Unzip the ultimate-category-excluder.zip file.
 3. Activate the plugin on your plugins page.
-4. You can edit the options by going under "Options" and then "Category Exclusion."
+4. You can edit the options by going under "Settings" and then "Category Exclusion."
 5. If you are upgrading from an older version, you need to go into your "Category Exclusion" settings, choose at least one option from the Searches column, save settings, then go back and clear that option and save again.
 
 == Frequently Asked Questions ==
@@ -32,11 +32,17 @@ Go into your "Category Exclusion" settings, choose at least one option from the 
 
 == Changelog ==
 
+= 1.5 =
+* Corrected text domain value.
+
+= 1.4 =
+* No code changes. Syncing files.
+
+= 1.3 =
+* Modified implementation of text domain to match the standard approach.
+
 = 1.2 =
-* Pro version introduced. Core code synchronized between the two versions. No existing functionality removed from free version.
-* Pro version: Added support for excluding from date, category, and author archives specifically.
-* Pro version: Added option to control whether rules apply to front page in addition to elsewhere on the site.
-* Pro version: Added option to control whether rules apply to "main query" or all queries. This can be used to control what shows in the body of a page vs. sidebars/widgets. 
+* Addressed minor vulnerability reported by SCA AppSec of Checkmarx. If concerned, review your UCE category settings to ensure they are set as expected.
 
 = 1.1 =
 * Bug fix for compatibility with Yoast Video SEO plugin.

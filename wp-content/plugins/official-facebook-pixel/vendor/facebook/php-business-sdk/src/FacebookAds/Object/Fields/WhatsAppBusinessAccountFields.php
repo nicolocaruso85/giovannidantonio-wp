@@ -37,24 +37,32 @@ use FacebookAds\Enum\AbstractEnum;
 
 class WhatsAppBusinessAccountFields extends AbstractEnum {
 
+  const ACCOUNT_REVIEW_STATUS = 'account_review_status';
   const ANALYTICS = 'analytics';
+  const CREATION_TIME = 'creation_time';
   const CURRENCY = 'currency';
   const ID = 'id';
   const MESSAGE_TEMPLATE_NAMESPACE = 'message_template_namespace';
   const NAME = 'name';
   const ON_BEHALF_OF_BUSINESS_INFO = 'on_behalf_of_business_info';
+  const OWNER_BUSINESS_INFO = 'owner_business_info';
+  const PRIMARY_FUNDING_ID = 'primary_funding_id';
   const PURCHASE_ORDER_NUMBER = 'purchase_order_number';
   const STATUS = 'status';
   const TIMEZONE_ID = 'timezone_id';
 
   public function getFieldTypes() {
     return array(
+      'account_review_status' => 'string',
       'analytics' => 'Object',
+      'creation_time' => 'int',
       'currency' => 'string',
       'id' => 'string',
       'message_template_namespace' => 'string',
       'name' => 'string',
       'on_behalf_of_business_info' => 'Object',
+      'owner_business_info' => 'Object',
+      'primary_funding_id' => 'string',
       'purchase_order_number' => 'string',
       'status' => 'string',
       'timezone_id' => 'string',

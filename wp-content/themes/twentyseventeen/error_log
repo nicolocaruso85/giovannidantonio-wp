@@ -1,0 +1,13 @@
+[31-Mar-2022 04:47:40 Europe/Rome] PHP Fatal error:  Call to undefined function get_template_part() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/footer.php on line 22
+[31-Mar-2022 04:47:50 Europe/Rome] PHP Fatal error:  Call to undefined function get_template_part() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/footer.php on line 22
+[31-Mar-2022 04:48:17 Europe/Rome] PHP Fatal error:  Call to undefined function get_template_part() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/footer.php on line 22
+[31-Mar-2022 05:01:48 Europe/Rome] PHP Fatal error:  Call to undefined function language_attributes() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/header.php on line 16
+[31-Mar-2022 06:24:30 Europe/Rome] PHP Fatal error:  Call to undefined function get_header() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/search.php on line 13
+[31-Mar-2022 06:25:37 Europe/Rome] PHP Fatal error:  Call to undefined function get_header() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/search.php on line 13
+[31-Mar-2022 08:06:25 Europe/Rome] PHP Fatal error:  Call to undefined function get_header() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/single.php on line 13
+[31-Mar-2022 08:43:42 Europe/Rome] PHP Notice:  Undefined index: wp_version in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/functions.php on line 15
+[31-Mar-2022 08:43:42 Europe/Rome] PHP Fatal error:  Call to undefined function get_template_directory() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/functions.php on line 16
+[31-Mar-2022 08:45:18 Europe/Rome] PHP Notice:  Undefined index: wp_version in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/functions.php on line 15
+[31-Mar-2022 08:45:18 Europe/Rome] PHP Fatal error:  Call to undefined function get_template_directory() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/functions.php on line 16
+[31-Mar-2022 08:46:32 Europe/Rome] PHP Notice:  Undefined index: wp_version in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/functions.php on line 15
+[31-Mar-2022 08:46:32 Europe/Rome] PHP Fatal error:  Call to undefined function get_template_directory() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/functions.php on line 16

@@ -43,11 +43,9 @@ class MPSUM_Commands {
 	/**
 	 * Retrieves core options and returns to construct general tab content
 	 *
-	 * @param array $data - Data from the remote call
-	 *
 	 * @return array|string An array of core options or error message
 	 */
-	public function get_general_contents($data) {
+	public function get_general_contents() {
 		$options = MPSUM_Updates_Manager::get_options('core', true);
 		if (empty($options)) {
 			$options = MPSUM_Admin_Core::get_defaults();
@@ -67,8 +65,41 @@ class MPSUM_Commands {
 	public function save_general_options($data) {
 		$options = $data['data']['data'];
 		$decoded_options = $this->_get_decoded_options($options);
+		$core_options = MPSUM_Updates_Manager::get_options('core', true);
+		$decoded_options['email_addresses'] = $core_options['email_addresses'];
 		MPSUM_Updates_Manager::update_options($decoded_options, 'core');
 		return MPSUM_Updates_Manager::get_options('core');
+	}
+
+	/**
+	 * Saves email notification emails
+	 *
+	 * @param string $email_addresses Email addresses (may be comma separated)
+	 *
+	 * @return string A success or error message.
+	 */
+	public function save_notification_emails($email_addresses) {
+		$email_addresses = trim($email_addresses);
+
+		// Check for empty amail addresses and save empty email options.
+		if (empty($email_addresses)) {
+			$options = MPSUM_Updates_Manager::get_options('core', true);
+			$options['email_addresses'] = '';
+			MPSUM_Updates_Manager::update_options($options, 'core');
+			return __('Your e-mail addresses have been saved.', 'stops-core-theme-and-plugin-updates');
+		}
+
+		// Check for valid emails.
+		$email_validation = MPSUM_Utils::validate_emails($email_addresses); // $email_addresses holds a string of email addresses. May be comma separated.
+
+		// Save emails if valid.
+		if (! $email_validation['errors']) {
+			$options = MPSUM_Updates_Manager::get_options('core', true);
+			$options['email_addresses'] = $email_validation['emails'];
+			MPSUM_Updates_Manager::update_options($options, 'core');
+			return __('Your e-mail addresses have been saved.', 'stops-core-theme-and-plugin-updates');
+		}
+		return __('One or more of the e-mail addresses is invalid.', 'stops-core-theme-and-plugin-updates');
 	}
 
 	/**
@@ -102,6 +133,9 @@ class MPSUM_Commands {
 			return __('User has insufficient capability to update plugins', 'stops-core-theme-and-plugin-updates');
 		}
 		$args = $this->_get_paged_view_status($data);
+		if (! isset($args['slug'])) {
+			$args['slug'] = 'mpsum-update-options';
+		}
 		return Easy_Updates_Manager()->include_template('admin-tab-plugins.php', true, $args);
 	}
 
@@ -145,6 +179,9 @@ class MPSUM_Commands {
 			return __('User has insufficient capability to update themes', 'stops-core-theme-and-plugin-updates');
 		}
 		$args = $this->_get_paged_view_status($data);
+		if (! isset($args['slug'])) {
+			$args['slug'] = 'mpsum-update-options';
+		}
 		return Easy_Updates_Manager()->include_template('admin-tab-themes.php', true, $args);
 	}
 
@@ -185,8 +222,6 @@ class MPSUM_Commands {
 	 */
 	public function get_logs_contents($data) {
 
-		$disable_logs = isset($data['data']['disable_logs']) ? $data['data']['disable_logs'] : false;
-		$enable_logs = isset($data['data']['enable_logs']) ? $data['data']['enable_logs'] : false;
 		$paged = isset($data['data']['paged']) ? $data['data']['paged'] : '1';
 		$view = isset($data['data']['view']) ? $data['data']['view'] : 'all';
 		$m = isset($data['data']['m']) ? $data['data']['m'] : 'all';
@@ -197,7 +232,10 @@ class MPSUM_Commands {
 		$is_search = isset($data['data']['is_search']) ? $data['data']['is_search'] : false;
 		$search_term = isset($data['data']['search_term']) ? $data['data']['search_term'] : '';
 
-		$args = array('paged' => $paged, 'view' => $view, 'status' => $status, 'action_type' => $action_type, 'type' => $type, 'm' => $m, 'is_search' => $is_search, 'search_term' => $search_term, 'order' => $order, 'disable_logs' => $disable_logs, 'enable_logs' => $enable_logs );
+		$args = array('paged' => $paged, 'view' => $view, 'status' => $status, 'action_type' => $action_type, 'type' => $type, 'm' => $m, 'is_search' => $is_search, 'search_term' => $search_term, 'order' => $order);
+		if (! isset($args['slug'])) {
+			$args['slug'] = 'mpsum-update-options';
+		}
 		return Easy_Updates_Manager()->include_template('admin-tab-logs.php', true, $args);
 	}
 
@@ -208,7 +246,7 @@ class MPSUM_Commands {
 	 *
 	 * @return string Returns advanced tab content as HTML string
 	 */
-	public function get_advanced_contents($data) {
+	public function get_advanced_contents() {
 		new MPSUM_Admin_Advanced();
 		if (Easy_Updates_Manager()->is_premium()) {
 			new MPSUM_Premium();
@@ -467,6 +505,62 @@ class MPSUM_Commands {
 			return __('User has insufficient capability to manage options', 'stops-core-theme-and-plugin-updates');
 		}
 		return $this->premium_admin_ajax->disable_safe_mode($data);
+	}
+
+	/**
+	 * Enables Version Control Protection
+	 *
+	 * @param array $data An array of updated options
+	 *
+	 * @return string Confirmation message
+	 */
+	public function enable_version_control($data) {
+		if (!current_user_can('manage_options')) {
+			return __('User has insufficient capability to manage options', 'stops-core-theme-and-plugin-updates');
+		}
+		return $this->premium_admin_ajax->enable_version_control_protection($data);
+	}
+
+	/**
+	 * Disables Version Control Protection
+	 *
+	 * @param array $data An array of updated options
+	 *
+	 * @return string Confirmation message
+	 */
+	public function disable_version_control($data) {
+		if (!current_user_can('manage_options')) {
+			return __('User has insufficient capability to manage options', 'stops-core-theme-and-plugin-updates');
+		}
+		return $this->premium_admin_ajax->disable_version_control_protection($data);
+	}
+
+	/**
+	 * Enables Unmaintained Plugin Check
+	 *
+	 * @param array $data An array of updated options
+	 *
+	 * @return string Confirmation message
+	 */
+	public function enable_unmaintained_plugins_check($data) {
+		if (!current_user_can('manage_options')) {
+			return __('User has insufficient capability to manage options', 'stops-core-theme-and-plugin-updates');
+		}
+		return $this->premium_admin_ajax->enable_unmaintained_plugins($data);
+	}
+
+	/**
+	 * Disables Unmaintained Plugin Check
+	 *
+	 * @param array $data An array of updated options
+	 *
+	 * @return string Confirmation message
+	 */
+	public function disable_unmaintained_plugins_check($data) {
+		if (!current_user_can('manage_options')) {
+			return __('User has insufficient capability to manage options', 'stops-core-theme-and-plugin-updates');
+		}
+		return $this->premium_admin_ajax->disable_unmaintained_plugins($data);
 	}
 
 	/**

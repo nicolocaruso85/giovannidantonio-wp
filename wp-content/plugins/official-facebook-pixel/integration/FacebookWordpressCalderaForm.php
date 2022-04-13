@@ -39,7 +39,10 @@ class FacebookWordpressCalderaForm extends FacebookWordpressIntegrationBase {
   }
 
   public static function injectLeadEvent($out, $form) {
-    if (FacebookPluginUtils::isAdmin() || $out['status'] !== 'complete') {
+    if (
+      FacebookPluginUtils::isInternalUser() ||
+      $out['status'] !== 'complete'
+    ) {
       return $out;
     }
 
@@ -57,8 +60,8 @@ class FacebookWordpressCalderaForm extends FacebookWordpressIntegrationBase {
     <!-- Facebook Pixel Event Code -->
     %s
     <!-- End Facebook Pixel Event Code -->
-         ",
-      $code);
+        ",
+    $code);
 
     $out['html'] .= $code;
     return $out;
@@ -68,11 +71,12 @@ class FacebookWordpressCalderaForm extends FacebookWordpressIntegrationBase {
     if (empty($form)) {
       return array();
     }
-
     return array(
       'email' => self::getEmail($form),
       'first_name' => self::getFirstName($form),
-      'last_name' => self::getLastName($form)
+      'last_name' => self::getLastName($form),
+      'phone' => self::getPhone($form),
+      'state' => self::getState($form)
     );
   }
 
@@ -86,6 +90,18 @@ class FacebookWordpressCalderaForm extends FacebookWordpressIntegrationBase {
 
   private static function getLastName($form) {
     return self::getFieldValue($form, 'slug', 'last_name');
+  }
+
+  private static function getState($form){
+    return self::getFieldValue($form, 'type', 'states');
+  }
+
+  private static function getPhone($form) {
+    // Extract phone number from the better version first, fallback to the basic
+    // version if it's null
+    $phone = self::getFieldValue($form, 'type', 'phone_better');
+    return empty($phone) ? self::getFieldValue($form, 'type', 'phone')
+      : $phone;
   }
 
   private static function getFieldValue($form, $attr, $attr_value) {

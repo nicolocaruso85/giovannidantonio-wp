@@ -45,9 +45,11 @@ class HomeListingFields extends AbstractEnum {
   const AGENT_FB_PAGE_ID = 'agent_fb_page_id';
   const AGENT_NAME = 'agent_name';
   const AGENT_PHONE = 'agent_phone';
+  const APPLINKS = 'applinks';
   const AREA_SIZE = 'area_size';
   const AREA_UNIT = 'area_unit';
   const AVAILABILITY = 'availability';
+  const CATEGORY_SPECIFIC_FIELDS = 'category_specific_fields';
   const CO_2_EMISSION_RATING_EU = 'co_2_emission_rating_eu';
   const CURRENCY = 'currency';
   const DAYS_ON_MARKET = 'days_on_market';
@@ -58,6 +60,7 @@ class HomeListingFields extends AbstractEnum {
   const HEATING_TYPE = 'heating_type';
   const HOME_LISTING_ID = 'home_listing_id';
   const ID = 'id';
+  const IMAGE_FETCH_STATUS = 'image_fetch_status';
   const IMAGES = 'images';
   const LAUNDRY_TYPE = 'laundry_type';
   const LISTING_TYPE = 'listing_type';
@@ -89,9 +92,11 @@ class HomeListingFields extends AbstractEnum {
       'agent_fb_page_id' => 'Page',
       'agent_name' => 'string',
       'agent_phone' => 'string',
+      'applinks' => 'CatalogItemAppLinks',
       'area_size' => 'unsigned int',
       'area_unit' => 'string',
       'availability' => 'string',
+      'category_specific_fields' => 'CatalogSubVerticalList',
       'co_2_emission_rating_eu' => 'Object',
       'currency' => 'string',
       'days_on_market' => 'unsigned int',
@@ -102,6 +107,7 @@ class HomeListingFields extends AbstractEnum {
       'heating_type' => 'string',
       'home_listing_id' => 'string',
       'id' => 'string',
+      'image_fetch_status' => 'ImageFetchStatus',
       'images' => 'list<string>',
       'laundry_type' => 'string',
       'listing_type' => 'string',

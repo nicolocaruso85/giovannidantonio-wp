@@ -1,0 +1,5 @@
+[31-Mar-2022 05:59:28 Europe/Rome] PHP Fatal error:  Call to undefined function the_id() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/template-parts/page/content-page.php on line 15
+[31-Mar-2022 07:17:05 Europe/Rome] PHP Fatal error:  Call to undefined function the_id() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/template-parts/page/content-front-page.php on line 12
+[31-Mar-2022 09:35:16 Europe/Rome] PHP Fatal error:  Call to undefined function post_class() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/template-parts/page/content-front-page-panels.php on line 15
+[31-Mar-2022 09:36:38 Europe/Rome] PHP Fatal error:  Call to undefined function post_class() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/template-parts/page/content-front-page-panels.php on line 15
+[31-Mar-2022 09:36:49 Europe/Rome] PHP Fatal error:  Call to undefined function post_class() in /home/wjqefbsy/giovannidantonio/wp-content/themes/twentyseventeen/template-parts/page/content-front-page-panels.php on line 15

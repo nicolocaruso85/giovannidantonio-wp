@@ -1,11 +1,11 @@
 === Easy Updates Manager ===
 Contributors: davidanderson, kidsguide, ronalfy, roary86, bigwing, webulous
 Tags: updates manager, easy updates manager, disable updates manager, disable updates, update control, plugin updates, theme updates, core updates, automatic updates, multisite, logs
-Requires at least: 4.6
-Requires PHP: 5.3
+Requires at least: 5.1
+Requires PHP: 5.6
 Donate link: https://easyupdatesmanager.com
-Tested up to: 5.1
-Stable tag: 8.0.5
+Tested up to: 5.9
+Stable tag: 9.0.12
 License: GPLv2 or later
 
 Manage all your WordPress updates, including individual updates, automatic updates, logs, and loads more. This also works very well with WordPress Multisite.
@@ -52,6 +52,7 @@ Premium features include:
 <li>Check plugins: runs a check of plugins that have been removed from the WordPress Plugin Directory</li>
 <li>Webhook: integrates with third-party services to run automatic updates via cron or even Zapier</li>
 <li>Export logs: exports logs for printing, or downloads a CSV or JSON file for a date range</li>
+<li>Version control protection: prevent updates from occuring to plugins and themes under version control</li>
 </ul>
 
 > For more information on Easy Updates Manager Premium, <a href="https://easyupdatesmanager.com">check out our website at easyupdatesmanager.com</a>.
@@ -117,13 +118,138 @@ https://vimeo.com/291084061
 
 = Does Easy Updates Manager work with third-party plugins and themes? =
 
-Since third-party providers use custom update mechanisms, we cannot guarantee that they will work with Easy Updates Manager.
+Since third-party providers use custom update mechanisms, we cannot always guarantee that they will work with Easy Updates Manager. Most will, but there are a number of common mistakes that plugin authors can make.
 
 = Additional Information and FAQ =
 
 For additional information and FAQs for Easy Updates Manager <a href="https://easyupdatesmanager.com">check out our website</a>.
 
 == Changelog ==
+
+= 9.0.12 - 2021-12-17 =
+
+* FEATURE: Semantic versioning feature that when enabled it will allow only patch/security release updates for plugins and/or themes
+* FIX: The log table didn't get updated when upgrading from the very old table versions (1.0.0 and 1.1.3) to the current latest (1.1.5)
+
+= 9.0.11 - 2021-12-08 =
+
+* FIX: Change the order (priority) of auto_update_plugin/theme filters to make the 'Safe Mode' feature (Premium) work properly
+* TWEAK: Improve the way errors are handled before and after a plugin activation takes place (deactivated plugins must be reactivated immediately regardless of whether or not the plugins contain a fatal error)
+* TWEAK: Change use of '$' to local/function scope, to prevent conflicts
+
+= 9.0.10 - 2021-09-28 =
+
+* FIX: Inconsistent behaviour of the 'manually update' option of the plugin updates setting (it updated plugins to their major/minor version that shouldn't have happened)
+* FIX: Problematic plugins that cause a PHP fatal error after their automatic updates were downloaded and installed don't get deactivated properly
+* FIX: The email report that falsely reports successful plugin reactivations
+* FIX: Make sure auto update status in the updates screen UI page always reflect the change made from the EUM updates settings page
+* FIX: Unformatted string notice appears on the admin dashboard
+* TWEAK: Simplify 'WordPress core updates` setting by eliminating redundant or unnecessary options whilst preserving user preferences
+* TWEAK: Change the misleading checkbox text label of the WordPress core updates setting that has led to confusion
+* TWEAK: Override WordPress core auto-updates settings by not showing it in the updates screen UI (wp-admin/update-core.php)
+
+= 9.0.9 - 2021-06-12 =
+
+* FEATURE: Add the ability to disable update notification emails completely when a plugin updates automatically
+* TWEAK: Added Update URI header field to avoid accidentally being overwritten with an update of a plugin of a similar name from the WordPress.org Plugin Directory.
+* TWEAK: Added stacktrace column to the logging table to log a PHP stack trace
+* TWEAK: Correct misnamed array key when migrating theme options
+* TWEAK: Prevent a couple of PHP undefined variable log notices upon de-installation
+* TWEAK: Prevent a potential unwanted PHP debugging notice in MPSUM_Disable_Updates::http_request_args_remove_plugins_themes()
+* TWEAK: Update seasonal notices
+
+= 9.0.8 - 2021-03-08 =
+
+* TWEAK: Correctly log 'from' version for themes when scheduled update is run.
+* TWEAK: Adjust a method definition that caused a PHP notice in PHP 8
+* TWEAK: Escape existing super admin usernames in SQL query to avoid code notice
+* TWEAK: Adjust escaping method used for an SQL function (not believed to have any security implications)
+
+= 9.0.7 - 2020-12-17 =
+
+* TWEAK: Update jQuery document ready style to the one not deprecated in jQuery 3.0
+* TWEAK: Bump PHP requirement to 5.6+
+* TWEAK: Renamed UpdraftCentral's command classes filter
+* TWEAK: extend white labelling to include safemode warning notices, webhook responses and WP 5.5's new "automatic upgrades" user-interface additions
+* TWEAK: Removed MetaSlider notice in the notices collection
+* TWEAK: An install was seen in which an interaction with some other component caused excessive logging
+* TWEAK: Updating wording to be constant througout EUM.
+* TWEAK: Manual core update showing correct to and from versions.
+* TWEAK: Updating wording to be constant througout EUM.
+* FIX: Auto-updates will trigger on managed hosts that disable version checking.
+
+= 9.0.6 - 2020-08-10 =
+
+* FIX: Fatal error in a template file
+
+= 9.0.5 - 2020-08-10 =
+
+* TWEAK: Some minor code improvements based on PHPCS analysis
+* TWEAK: Updated seasonal notices
+* TWEAK: Add WP 5.5 support. Since EUM's update management facilities are much more sophisticated than WP 5.5's new "automatic upgrades" user-interface additions, the new WP 5.5 options do not map simply onto existing EUM options. Thus the only way they can work together is if EUM replaces those additions with links back to the EUM controls.
+
+= 9.0.4 - 2020-04-27 =
+
+* FEATURE: Allow "every 3 hours" and "every 6 hours" options for the update frequency checks
+
+= 9.0.3 - 2020-04-14 =
+
+* TWEAK: Update class Updraftplus_Notices
+* TWEAK: Update WP-Optimize notices
+* TWEAK: Updater will now make checks on availability without needing login
+* TWEAK: Minimum supported WP version is now 5.1. If you want to install on an older version, then please use a past release. The resources used for supporting older versions are better deployed elsewhere - the aim of EUM is to help you keep up-to-date!
+
+= 9.0.2 - 2020-01-24 =
+
+* FIX: Auto-backup (Premium) feature disabled whilst an issue that could cause it to continually repeat is investigated
+
+= 9.0.1 - 2020-01-21 =
+
+* FIX: (Premium feature) UpdraftPlus will only take one backup during the auto-update process.
+* FIX: Update translations after an auto-update has completed.
+
+= 9.0.0 - 2020-01-15 =
+
+* FEATURE: Admin user interface has been cleaned up, providing more straightforward options.
+* FEATURE: (Premium) Check for unmaintained plugins.
+* TWEAK: Constants can now be used to disable the outdated browser warning (EUM_ENABLE_BROWSER_NAG), the WordPress version in the footer (EUM_ENABLE_WORDPRESS_FOOTER_VERSION), and the ratings prompt on the General screen (EUM_ENABLE_RATINGS_NAG).
+* FIX: Prevent Force Updates from deactivating plugins.
+* FIX: (Premium feature) UpdraftPlus will now take a backup during an auto-update
+* FIX: (Premium feature) Fix cron schedules so they are run at the correct time.
+
+= 8.2.0 - 2019-10-30 =
+
+* FEATURE: (Premium) Safe mode now checks themes for compatibility.
+* FEATURE: (Premium) Version controlled assets now show in the EUM plugins and themes tabs. 
+* FIX: Delayed updates were delaying automatic updates to WordPress core when no delay was requested
+* TWEAK: Divi theme can now be auto-upgraded.
+* TWEAK: Bump required WP version from 4.6 to 4.7. We've not introduced anything to make it incompatible so it will likely stil work; but this is the support requirement.
+
+= 8.1.1 - 2019-10-23 =
+
+* FIX: Fixed uninstall script error when deleting the plugin.
+
+
+= 8.1.0 - 2019-10-08 =
+
+* FEATURE: Notes section added to log to show why an automatic update failed.
+* FEATURE: (Premium) Adding version control protection so that version controlled plugins or themes will not be updated.
+* FIX: Fixed saving error when toggling auto-update on individual themes
+* FIX: Don't wipe settings when removing the free version, if premium is installed. Or vice versa.
+* FIX: Enabling/disabling admin bar was resetting General options.
+* FIX: Disabling Core updates will no longer block other automatic updates.
+* FIX: Translation updates are run after automatic updates have completed.
+* FIX: Translation updates now show the correct label.
+* FIX: (Premium) Slack logging now shows the site name from where the event came from.
+* TWEAK: UI Fix: Prevent notices about EUM-Premium from appearing in the premium version of the plugin
+* TWEAK: Do not allow null values to be passed to an INSERT on the version_from field in the log table
+* TWEAK: Add some missing translation domains
+* TWEAK: Code-styling tweak to avoid use of extract()
+* TWEAK: Adding dashboard notice if automatic updates are disabled through constants.
+* TWEAK: Prevent unnecessary PHP notice when controlling via UpdraftCentral
+* TWEAK: Database logging is now always turned on, to aid troubleshooting. (The storage overhead is tiny, since updates are infrequent events compared with other things going on in a WP database).
+* TWEAK: Update updater class to latest series (1.8)
+* TWEAK: Automatic update emails are only sent once every twenty four hours.
 
 = 8.0.5 - 2019-03-28 =
 
@@ -239,4 +365,5 @@ For additional information and FAQs for Easy Updates Manager <a href="https://ea
 For past changelogs, <a href="https://easyupdatesmanager.com/blog/">please visit our blog</a>.
 
 == Upgrade Notice ==
-* 8.0.5: Various small tweaks and improvements, plus a security fix. A recommended update for all.
+
+* 9.0.12 : Semantic versioning feature that when enabled it will allow only patch/security release updates for plugins and/or themes. The log table didn't get updated when upgrading from the very old table versions (1.0.0 and 1.1.3) to the current latest (1.1.5); a recommended update for all.

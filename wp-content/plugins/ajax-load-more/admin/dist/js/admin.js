@@ -1208,7 +1208,7 @@ var alm = alm || {};
 
 /*
  *  alm.attachSticky
-*/
+ */
 alm.attachSticky = function (el, anchor) {
 	var top = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
@@ -1234,475 +1234,621 @@ alm.attachSticky = function (el, anchor) {
 
 /*
  *  alm.resizeSticky
-*/
-alm.resizeSticky = function () {
-	var sticky = document.getElementById('cnkt-sticky');
-	var el = document.getElementById('cnkt-sticky-wrapper');
-	var atts = window.getComputedStyle(el);
-	sticky.style.width = atts.width;
+ */
+alm.resizeSticky = function (target, element) {
+	var atts = window.getComputedStyle(element);
+	target.style.width = atts.width;
 };
 
 /*
  *  initSticky
-*/
-var initSticky = function initSticky() {
-	if (document.getElementById("cnkt-sticky-wrapper")) {
-		var sticky_el = document.getElementById('cnkt-sticky');
-		var sticky_anchor = document.getElementById('cnkt-sticky-wrapper');
-		var sticky_top = 70; // The position the sticky should stick 
+ */
+var initSticky = function initSticky(element) {
+	if (element) {
+		var target = element.firstElementChild;
+		var sticky_top = 70; // The position the sticky should stick
 
-		// Scroll    
+		// Scroll
 		window.addEventListener('scroll', function (e) {
-			alm.attachSticky(sticky_el, sticky_anchor, sticky_top);
+			alm.attachSticky(target, element, sticky_top);
 		});
 		// Resize
 		window.addEventListener('resize', function (e) {
-			alm.resizeSticky();
+			alm.resizeSticky(target, element);
 		});
 		// Init
-		alm.resizeSticky();
-		alm.attachSticky(sticky_el, sticky_anchor, sticky_top);
+		alm.resizeSticky(target, element);
+		alm.attachSticky(target, element, sticky_top);
 	}
 };
 
 window.onload = function () {
-	initSticky();
+	var stickyID = document.getElementById('cnkt-sticky-wrapper');
+	if (stickyID) {
+		initSticky(stickyID);
+	}
+	var stickies = document.querySelectorAll('.cnkt-sticky-wrapper');
+	if (stickies) {
+		stickies.forEach(function (sticky) {
+			initSticky(sticky);
+		});
+	}
 };
 'use strict';
 
 var _alm = _alm || {};
 
 jQuery(document).ready(function ($) {
-   "use strict";
+	'use strict';
 
-   /*
-   *  _alm.saveSettings
-   *  Setting panel save actions
-   *
-   *  @since 3.2.0
-   */
+	_alm.options = {
+		speed: 200
+	};
 
-   var almSettings = $('#alm_OptionsForm'),
-       savingSettings = false,
-       settingsForm = document.querySelector('#alm_OptionsForm'),
-       settingsTarget = document.querySelector('.alm-settings-feedback');
+	/*
+  *  Test REST API access
+  *
+  *  @since 5.1.1
+  */
+	if ($('.restapi-access').length) {
+		$.ajax({
+			type: 'GET',
+			url: alm_admin_localize.restapi.url + alm_admin_localize.restapi.namespace + '/test/',
+			dataType: 'json',
+			success: function success(data) {
+				if (data.success) {
+					console.log('Ajax Load More successfully connected to the WordPress REST API.');
+				}
+			},
+			error: function error(xhr, status, _error) {
+				console.log(status);
+				$('.restapi-access').fadeIn();
+			}
+		});
+	}
 
-   if (settingsForm) {
-      document.body.appendChild(settingsTarget);
-   }
+	/**
+  * Tabbed Navigation Elements
+  *
+  * @since 5.4
+  */
+	var ACTIVE_TAB_CLASS = 'active';
+	function openTabbedItem(button, index, almTabbedWrapper) {
+		// Get Currently Active Button.
+		var activeBtn = document.querySelector('.alm-tabbed-wrapper--nav button.active');
+		if (activeBtn) {
+			activeBtn.classList.remove(ACTIVE_TAB_CLASS);
+		}
 
-   _alm.saveSettings = function () {
+		// Add Button Active Class.
+		button.classList.add(ACTIVE_TAB_CLASS);
 
-      if (savingSettings) return false;
+		// Activate Current Section
+		if (almTabbedWrapper) {
+			var currentActive = almTabbedWrapper.querySelector('.alm-tabbed-wrapper--section.' + ACTIVE_TAB_CLASS);
+			var sections = almTabbedWrapper.querySelectorAll('.alm-tabbed-wrapper--section');
+			if (currentActive && sections) {
+				currentActive.classList.remove(ACTIVE_TAB_CLASS);
+				if (sections[index]) {
+					sections[index].classList.add(ACTIVE_TAB_CLASS);
+					sections[index].focus({ preventScroll: true });
+					$('html, body').animate({
+						scrollTop: $('.alm-tabbed-wrapper--sections').offset().top - 45
+					}, 350, function () {
+						var section = parseInt(index) + 1;
+						window.location.hash = 'alm-section-' + section;
+					});
+				}
+			}
+		}
+	}
 
-      savingSettings = true;
-      settingsForm.classList.add('--saving');
-      settingsTarget.classList.add('--saving');
-      settingsTarget.innerHTML = alm_admin_localize.settings_saving;
+	var almTabbedWrapper = document.querySelector('.alm-tabbed-wrapper');
+	if (almTabbedWrapper) {
+		var current = almTabbedWrapper.querySelector('.alm-tabbed-wrapper--section');
+		if (current) {
+			current.classList.add(ACTIVE_TAB_CLASS);
+		}
+		var tabbedNav = almTabbedWrapper.querySelectorAll('.alm-tabbed-wrapper--nav button');
+		if (tabbedNav) {
+			tabbedNav.forEach(function (item, index) {
+				item.addEventListener('click', function () {
+					openTabbedItem(this, index, almTabbedWrapper);
+				});
+			});
+		}
 
-      almSettings.ajaxSubmit({
+		// Open hash
+		var hash = window.location.hash;
+		if (hash && hash.indexOf('alm-section') !== -1) {
+			hash = hash.replace('#', '');
+			var openSection = hash.replace('alm-section-', '');
+			openSection = parseInt(openSection) - 1;
+			// Get button from nodelist.
+			var nodeItem = tabbedNav.item(openSection);
+			if (nodeItem) {
+				// trigger a click.
+				nodeItem.click();
+			}
+		} else {
+			if (tabbedNav) {
+				tabbedNav[0].classList.add(ACTIVE_TAB_CLASS);
+			}
+		}
+	}
 
-         // Success      
-         success: function success() {
+	/**
+  * Save Repeater Templates with cmd + s and ctrl + s
+  *
+  * @since 5.1
+  */
+	document.addEventListener('keydown', function (e) {
+		if ((window.navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey) && e.keyCode == 83) {
+			if (e.target.nodeName === 'TEXTAREA' && $(e.target).closest('.repeater-wrap')) {
+				console.log('Saving template...');
+				var btn = $(e.target).closest('.repeater-wrap').find('input.save-repeater');
+				if (btn) {
+					btn.click();
+				}
+			}
 
-            // Delay for effect
-            setTimeout(function () {
-               settingsTarget.classList.remove('--saving');
-               settingsTarget.classList.add('--saved');
-               settingsTarget.innerHTML = alm_admin_localize.settings_saved;
-               settingsForm.classList.remove('--saving');
-               console.log(alm_admin_localize.ajax_load_more + ' - ' + alm_admin_localize.settings_saved);
-               savingSettings = false;
+			e.preventDefault();
+		}
+	}, false);
 
-               setTimeout(function () {
-                  settingsTarget.classList.remove('--saved');
-               }, 2500);
-            }, 1000);
-         },
+	/*
+  *  Set focus in code mirror editor
+  *  @since 5.1
+  */
+	$('label.trigger-codemirror').on('click', function () {
+		var el = $(this);
+		var id = el.data('id');
+		var cm = window['editor_' + id];
+		if (cm) {
+			cm.focus();
+			cm.setCursor(cm.lineCount(), 0);
+		}
+	});
 
-         // Error
-         error: function error() {
+	/**
+  * Setting panel save actions
+  *
+  * @since 3.2.0
+  */
+	var almSettings = $('#alm_OptionsForm'),
+	    savingSettings = false,
+	    settingsForm = document.querySelector('#alm_OptionsForm'),
+	    settingsTarget = document.querySelector('.alm-settings-feedback');
 
-            // Delay for effect
-            setTimeout(function () {
-               settingsTarget.classList.remove('--saving');
-               settingsTarget.classList.add('--error');
-               settingsTarget.innerHTML = alm_admin_localize.settings_error;
-               settingsForm.classList.remove('--saving');
-               console.log(alm_admin_localize.ajax_load_more + ' - ' + alm_admin_localize.settings_error);
-               savingSettings = false;
+	if (settingsForm) {
+		document.body.appendChild(settingsTarget);
+	}
 
-               setTimeout(function () {
-                  settingsTarget.classList.remove('--error');
-               }, 2500);
-            }, 1000);
-         }
-      });
-      return false;
-   };
+	_alm.saveSettings = function () {
+		if (savingSettings) return false;
 
-   // On Change, save the settings
-   var settingsTimer = void 0;
-   $(document).on('change', '#alm_OptionsForm input, #alm_OptionsForm textarea, #alm_OptionsForm select', function () {
-      // Set a timer to avoid updating settings to frequently
-      if (settingsTimer) clearTimeout(settingsTimer);
-      settingsTimer = setTimeout(function () {
-         _alm.saveSettings();
-      }, 500);
-   });
+		savingSettings = true;
+		settingsForm.classList.add('--saving');
+		settingsTarget.classList.add('--saving');
+		settingsTarget.innerHTML = alm_admin_localize.settings_saving;
 
-   /*
-     *  Tooltipster
-     *  http://iamceege.github.io/tooltipster/
-     *
-     *  @since 2.8.4
-     */
+		almSettings.ajaxSubmit({
+			// Success
+			success: function success() {
+				// Delay for effect
+				setTimeout(function () {
+					settingsTarget.classList.remove('--saving');
+					settingsTarget.classList.add('--saved');
+					settingsTarget.innerHTML = alm_admin_localize.settings_saved;
+					settingsForm.classList.remove('--saving');
+					//console.log(alm_admin_localize.ajax_load_more +' - '+ alm_admin_localize.settings_saved);
+					savingSettings = false;
 
-   $('.tooltip').tooltipster({
-      delay: 100,
-      speed: 175,
-      maxWidth: 400
-   });
+					setTimeout(function () {
+						settingsTarget.classList.remove('--saved');
+					}, 2500);
+				}, 500);
+			},
 
-   /*
-     *  Button preview pane
-     *  Found on Settings and Shortcode Builder
-     *
-     *  @since 2.8.4
-     */
+			// Error
+			error: function error() {
+				// Delay for effect
+				setTimeout(function () {
+					settingsTarget.classList.remove('--saving');
+					settingsTarget.classList.add('--error');
+					settingsTarget.innerHTML = alm_admin_localize.settings_error;
+					settingsForm.classList.remove('--saving');
+					console.log(alm_admin_localize.ajax_load_more + ' - ' + alm_admin_localize.settings_error);
+					savingSettings = false;
 
-   $("select#alm_settings_btn_color").change(function () {
-      var color = jQuery(this).val();
-      // Remove other colors
-      $('.ajax-load-more-wrap.core.preview-pane').removeClass('none');
-      $('.ajax-load-more-wrap.core').removeClass('default');
-      $('.ajax-load-more-wrap.core').removeClass('grey');
-      $('.ajax-load-more-wrap.core').removeClass('purple');
-      $('.ajax-load-more-wrap.core').removeClass('green');
-      $('.ajax-load-more-wrap.core').removeClass('red');
-      $('.ajax-load-more-wrap.core').removeClass('blue');
-      $('.ajax-load-more-wrap.core').removeClass('white');
-      $('.ajax-load-more-wrap.core').removeClass('infinite');
-      $('.ajax-load-more-wrap.core').removeClass('skype');
-      $('.ajax-load-more-wrap.core').removeClass('ring');
-      $('.ajax-load-more-wrap.core').removeClass('fading-blocks');
-      $('.ajax-load-more-wrap.core').removeClass('fading-circles');
-      $('.ajax-load-more-wrap.core').removeClass('chasing-arrows');
-      $('.ajax-load-more-wrap.core').addClass(color);
-   });
-   $("select#alm_settings_btn_color").click(function (e) {
-      e.preventDefault();
-   });
+					setTimeout(function () {
+						settingsTarget.classList.remove('--error');
+					}, 2500);
+				}, 500);
+			}
+		});
+		return false;
+	};
 
-   $('.alm-template-listing li a').click(function (e) {
-      e.preventDefault();
-      var el = $(this),
-          val = el.data('path');
-      el.parent().parent().next('.template-selection').val(val);
-   });
+	// On Change, save the settings
+	var settingsTimer = void 0;
+	$(document).on('change', '#alm_OptionsForm input, #alm_OptionsForm textarea, #alm_OptionsForm select', function () {
+		// Set a timer to avoid updating settings to frequently
+		if (settingsTimer) clearTimeout(settingsTimer);
+		settingsTimer = setTimeout(function () {
+			_alm.saveSettings();
+		}, 500);
+	});
 
-   $('.alm-template-section-nav li a').click(function (e) {
-      e.preventDefault();
-      var el = $(this),
-          index = el.parent().index(),
-          parent = el.parent().parent().parent('.repeater-wrap');
+	/**
+  * Download Repeater Template
+  * Trigger the download of a repeater template from the admin
+  *
+  * @since 3.6
+  */
+	$('.download-repeater').on('click', function () {
+		var el = this;
+		el.closest('form').submit();
+	});
 
-      if (!el.hasClass('active')) {
-         el.parent().addClass('active').siblings().removeClass('active');
-         $('.alm-template-toggle', parent).hide();
-         $('.alm-template-toggle', parent).eq(index).show();
-      }
-   });
+	/**
+  * Tooltipster
+  *
+  * @see http://iamceege.github.io/tooltipster/
+  * @since 2.8.4
+  */
+	$('.ajax-load-more-inner-wrapper').on('mouseenter', '.tooltip:not(.tooltipstered)', function () {
+		$(this).tooltipster({
+			delay: 100,
+			speed: 150,
+			maxWidth: 325
+		}).tooltipster('show');
+	});
 
-   /*
-   *  _alm.copyToClipboard
-   *  Copy shortcode to clipboard
-   *
-   *  @since 2.0.0
-   */
+	/**
+  * Button preview pane
+  * Found on Settings and Shortcode Builder.
+  *
+  * @since 2.8.4
+  */
+	$('select#alm_settings_btn_color').on('change', function () {
+		var color = jQuery(this).val();
+		// Remove other colors
+		var wrap = $('.ajax-load-more-wrap');
+		wrap.attr('class', '');
+		wrap.addClass('ajax-load-more-wrap');
+		wrap.addClass(color);
+		$('#test-alm-button', wrap).removeClass('loading');
 
-   _alm.copyToClipboard = function (text) {
-      window.prompt("Copy link to your clipboard: Press Ctrl + C then hit Enter to copy.", text);
-   };
+		// Add loading class if Infinite loading style
+		if (color.indexOf('infinite') >= 0) {
+			$('#test-alm-button', wrap).addClass('loading');
+		}
+	});
 
-   // Copy link on shortcode builder
-   $('.shortcode-builder .copy').click(function () {
-      var c = $('#shortcode_output').html();
-      _alm.copyToClipboard(c);
-   });
+	$('select#alm_settings_btn_color').click(function (e) {
+		e.preventDefault();
+	});
 
-   // Copy link on repeater templates
-   $('.alm-dropdown .copy a').click(function () {
-      var container = $(this).closest('.repeater-wrap'),
-          // find closet wrap
-      el = container.data('name'); // get template name
+	$('.alm-template-listing li a').click(function (e) {
+		e.preventDefault();
+		var el = $(this),
+		    val = el.data('path');
+		el.parent().parent().next('.template-selection').val(val);
+	});
 
-      if (el === 'default') el = 'template-default';
-      var c = $('#' + el).val(); // Get textarea val()
-      _alm.copyToClipboard(c);
-   });
+	$('.alm-template-section-nav li a').click(function (e) {
+		e.preventDefault();
+		var el = $(this),
+		    index = el.parent().index(),
+		    parent = el.parent().parent().parent('.repeater-wrap');
 
-   /*
-     *  Expand/Collapse shortcode headings
-     *
-     *  @since 2.0.0
-     */
+		if (!el.hasClass('active')) {
+			el.parent().addClass('active').siblings().removeClass('active');
+			$('.alm-template-toggle', parent).hide();
+			$('.alm-template-toggle', parent).eq(index).show();
+		}
+	});
 
-   $(document).on('click', 'h3.heading', function () {
-      var el = $(this);
-      if ($(el).hasClass('open')) {
-         $(el).next('.expand-wrap').slideDown(100, 'alm_easeInOutQuad', function () {
-            $(el).removeClass('open');
-         });
-      } else {
-         $(el).next('.expand-wrap').slideUp(100, 'alm_easeInOutQuad', function () {
-            $(el).addClass('open');
-         });
-      }
-   });
+	// Copy to Clipboard
+	$('.copy-to-clipboard').on('click', function () {
+		var btn = $(this).get(0);
+		var input = document.querySelector('#shortcode_output');
 
-   $(document).on('click', '.toggle-all', function () {
-      var el = $(this),
-          type = el.data('id');
-      if ($(el).hasClass('closed')) {
-         $(el).removeClass('closed');
-         $('h3.heading').removeClass('open');
-         $('.expand-wrap').slideDown(100, 'alm_easeInOutQuad');
-      } else {
-         $(el).addClass('closed');
-         $('h3.heading').addClass('open');
-         $('.expand-wrap').slideUp(100, 'alm_easeInOutQuad');
-      }
-   });
+		if (input && btn) {
+			var old_txt = btn.innerHTML;
+			var copied_txt = btn.dataset.copied ? btn.dataset.copied : old_txt;
 
-   /*
-   *  Activate License
-   *
-   *  @since 2.8.3
-   */
+			input.select();
+			document.execCommand('copy');
+			input.disabled = true;
+			btn.disabled = true;
+			input.focus();
 
-   var almActivating = false;
-   $(document).on('click', '.license-btn', function (e) {
-      e.preventDefault();
-      if (!almActivating) {
-         $('.license-btn-wrap .msg').remove();
-         almActivating = true;
-         var el = $(this),
-             wrap = el.closest('.license-btn-wrap'),
-             parent = el.closest('.license'),
-             type = el.data('type'),
-             item = wrap.data('name'),
-             url = wrap.data('url'),
-             upgrade = wrap.data('upgrade-url'),
-             status = wrap.data('option-status'),
-             key = wrap.data('option-key'),
-             license = parent.find('input[type=text]').val();
+			// Set Text of Button
+			btn.innerHTML = copied_txt;
 
-         $('.loading', parent).fadeIn(300);
+			setTimeout(function () {
+				btn.innerHTML = old_txt;
+				input.disabled = false;
+				btn.disabled = false;
+			}, 2500);
+		}
+	});
 
-         // Get value from Ajax
-         $.ajax({
-            type: 'GET',
-            url: alm_admin_localize.ajax_admin_url,
-            dataType: 'json',
+	_alm.copyToClipboard = function (text) {
+		window.prompt('Copy link to your clipboard: Press Ctrl + C then hit Enter to copy.', text);
+	};
 
-            data: {
-               action: 'alm_license_activation',
-               nonce: alm_admin_localize.alm_admin_nonce,
-               type: type,
-               item: item,
-               status: status,
-               url: url,
-               upgrade: upgrade,
-               key: key,
-               license: license
-            },
+	// Copy link on repeater templates
+	$('.alm-dropdown .copy a').click(function () {
+		var container = $(this).closest('.repeater-wrap'),
+		    // find closet wrap
+		el = container.data('name'); // get template name
 
-            success: function success(data) {
+		if (el === 'default') el = 'template-default';
+		var c = $('#' + el).val(); // Get textarea val()
+		_alm.copyToClipboard(c);
+	});
 
-               //console.log(data);
+	/*
+  *  Expand/Collapse shortcode headings
+  *
+  *  @since 2.0.0
+  */
 
-               if (data.msg) {
-                  $('.license-btn-wrap', parent).append('<div class="msg">' + data.msg + '</div>');
-               }
+	$(document).on('click', 'h3.heading', function () {
+		var el = $(this);
+		if ($(el).hasClass('open')) {
+			$(el).next('.expand-wrap').slideDown(_alm.options.speed, 'alm_easeInOutQuad', function () {
+				$(el).removeClass('open');
+			});
+		} else {
+			$(el).next('.expand-wrap').slideUp(_alm.options.speed, 'alm_easeInOutQuad', function () {
+				$(el).addClass('open');
+			});
+		}
+	});
 
-               if (data.license === 'valid') {
-                  $('.license-key-field .status', parent).addClass('active').removeClass('inactive').text(alm_admin_localize.active);
-                  $('.license-title .status', parent).addClass('valid').removeClass('invalid');
-                  $('.activate.license-btn', parent).addClass('hide');
-                  $('.deactivate.license-btn', parent).removeClass('hide');
-                  $('.no-license', parent).slideUp(200);
-               } else {
-                  $('.license-key-field .status', parent).removeClass('active').addClass('inactive').text(alm_admin_localize.inactive);
-                  $('.license-title .status', parent).removeClass('valid').addClass('invalid');
-                  $('.activate.license-btn', parent).removeClass('hide');
-                  $('.deactivate.license-btn', parent).addClass('hide');
-                  $('.no-license', parent).slideDown(200);
-               }
+	// Toggle Links.
+	$(document).on('click', '.toggle-all', function () {
+		var el = $(this);
+		if (el.hasClass('closed')) {
+			el.removeClass('closed');
 
-               $('.loading', parent).delay(250).fadeOut(300);
-               almActivating = false;
-            },
-            error: function error(xhr, status, _error) {
-               console.log(status);
-               $('.loading', parent).delay(250).fadeOut(300);
-               almActivating = false;
-            }
-         });
-      }
-   });
+			$('h3.heading, h2.shortcode-title').removeClass('open');
+			$('.section-wrap').slideDown(_alm.options.speed, 'alm_easeInOutQuad');
+			$('.expand-wrap').slideDown(_alm.options.speed, 'alm_easeInOutQuad');
+		} else {
+			el.addClass('closed');
 
-   /*
-   *  Get layout value Ajax
-   *
-   *  @since 2.8.7
-   */
-   $(document).on('click', '.alm-layout-selection li a.layout', function (e) {
-      e.preventDefault();
-      var el = $(this),
-          type = el.data('type'),
-          custom = el.hasClass('custom') ? 'true' : 'false',
-          textarea = el.closest('.repeater-wrap').find('.CodeMirror'),
-          layout_btn_text = el.html(),
-          name = el.closest('.repeater-wrap').data('name');
+			$('h3.heading, h2.shortcode-title').addClass('open');
+			$('.section-wrap').slideUp(_alm.options.speed, 'alm_easeInOutQuad');
+			$('.expand-wrap').slideUp(_alm.options.speed, 'alm_easeInOutQuad');
+		}
+	});
 
-      if (!el.hasClass('updating')) {
+	// Trigger click events on enter/return
+	$('h3.heading, h2.shortcode-title').on('keypress', function (e) {
+		var key = e.which;
+		if (key == 13) {
+			// the enter key code
+			$(this).click();
+			return false;
+		}
+	});
 
-         el.addClass('updating').text(alm_admin_localize.applying_layout + "...");
-         textarea.addClass('loading');
+	/**
+  * Activate License.
+  *
+  * @since 2.8.3
+  */
+	var almActivating = false;
+	$(document).on('click', '.license-btn', function (e) {
+		e.preventDefault();
 
-         // Get Codemirror Editor ID
-         var eid = '';
-         if (name === 'default') {
-            // Default Template
-            eid = window.editorDefault;
-         } else {
-            // Repeater Templates
-            eid = window['editor_' + name];
-         }
+		if (!almActivating) {
+			$('.license-btn-wrap .msg').remove();
+			almActivating = true;
 
-         // Get value from Ajax
-         $.ajax({
-            type: 'GET',
-            url: alm_admin_localize.ajax_admin_url,
-            data: {
-               action: 'alm_get_layout',
-               type: type,
-               custom: custom,
-               nonce: alm_admin_localize.alm_admin_nonce
-            },
-            dataType: "JSON",
-            success: function success(data) {
+			var el = $(this),
+			    wrap = el.closest('.license-btn-wrap'),
+			    parent = el.closest('.license'),
+			    type = el.data('type'),
+			    item = wrap.data('name'),
+			    url = wrap.data('url'),
+			    upgrade = wrap.data('upgrade-url'),
+			    status = wrap.data('option-status'),
+			    key = wrap.data('option-key'),
+			    license = parent.find('input[type=text]').val();
 
-               eid.setValue(data.value);
+			$('.loading', parent).fadeIn(300);
 
-               // Clear button styles
-               setTimeout(function () {
-                  el.text(alm_admin_localize.template_updated).blur();
-                  setTimeout(function () {
-                     el.removeClass('updating').html(layout_btn_text).blur(); // CLose drop menu
-                     el.closest('.alm-drop-btn').trigger('click');
-                     textarea.removeClass('loading');
-                  }, 400);
-               }, 400);
-            },
-            error: function error(xhr, status, _error2) {
-               console.log(status);
-               textarea.removeClass('loading');
-            }
-         });
-      }
-   });
+			// Get value from Ajax
+			$.ajax({
+				type: 'GET',
+				url: alm_admin_localize.ajax_admin_url,
+				dataType: 'json',
 
-   /*
-   *  Dismiss Sharing (Transient)
-   *
-   *  @since 2.8.7
-   */
-   $(document).on('click', '#alm_dismiss_sharing', function (e) {
-      e.preventDefault();
-      var el = $(this),
-          container = el.parent('.group');
-      // Get value from Ajax
-      $.ajax({
-         type: 'POST',
-         url: alm_admin_localize.ajax_admin_url,
-         data: {
-            action: 'alm_dismiss_sharing',
-            nonce: alm_admin_localize.alm_admin_nonce
-         },
-         success: function success(data) {
-            container.fadeOut();
-         },
-         error: function error(xhr, status, _error3) {
-            console.log(status);
-         }
-      });
-   });
+				data: {
+					action: 'alm_license_activation',
+					nonce: alm_admin_localize.alm_admin_nonce,
+					type: type,
+					item: item,
+					status: status,
+					url: url,
+					upgrade: upgrade,
+					key: key,
+					license: license
+				},
 
-   /*
-   *  Scroll to setting section
-   *
-   *  @since 2.7.3
-   */
+				success: function success(data) {
+					if (data.msg) {
+						$('.license-btn-wrap', parent).append('<div class="msg">' + data.msg + '</div>');
+					}
 
-   $(document).on('change', '#alm-settings-nav', function (e) {
-      e.preventDefault();
-      var el = $(this),
-          index = $('option:selected', el).index();
-      if (index !== '#') {
-         index = index - 1;
-         $('html, body').animate({
-            scrollTop: $("#alm_OptionsForm h2").eq(index).offset().top - 40
-         }, 500);
-      }
-   });
+					if (data.license === 'valid') {
+						$('.license-key-field .status', parent).addClass('active').removeClass('inactive').text(alm_admin_localize.active);
+						$('.license-title .status', parent).addClass('valid').removeClass('invalid');
+						$('.activate.license-btn', parent).addClass('hide');
+						$('.check-licence.license-btn', parent).addClass('hide');
+						$('.deactivate.license-btn', parent).removeClass('hide');
+						$('.renew-btn', parent).addClass('hide');
+						$('.no-license', parent).slideUp(200);
+					} else {
+						$('.license-key-field .status', parent).removeClass('active').addClass('inactive').text(alm_admin_localize.inactive);
+						$('.license-title .status', parent).removeClass('valid').addClass('invalid');
+						$('.activate.license-btn', parent).removeClass('hide');
+						$('.check-licence.license-btn', parent).addClass('hide');
+						$('.deactivate.license-btn', parent).addClass('hide');
+						$('.no-license', parent).slideDown(200);
+					}
 
-   /*
-   *  equalheight()
-   *
-   *  @since 2.7.3
-   */
+					$('.loading', parent).delay(250).fadeOut(300);
+					almActivating = false;
+				},
 
-   function equalheight(container) {
+				error: function error(status, _error2) {
+					console.log(status, _error2);
+					$('.loading', parent).delay(250).fadeOut(300);
+					almActivating = false;
+				}
+			});
+		}
+	});
 
-      var currentTallest = 0,
-          currentRowStart = 0,
-          rowDivs = [],
-          $el,
-          topPosition = 0;
+	/**
+  * Get layout value Ajax.
+  *
+  * @since 2.8.7
+  */
+	$(document).on('click', '.alm-layout-selection li a.layout', function (e) {
+		e.preventDefault();
+		var el = $(this),
+		    type = el.data('type'),
+		    custom = el.hasClass('custom') ? 'true' : 'false',
+		    textarea = el.closest('.repeater-wrap').find('.CodeMirror'),
+		    layout_btn_text = el.html(),
+		    name = el.closest('.repeater-wrap').data('name');
 
-      $(container).each(function () {
-         $el = $(this);
-         $($el).height('auto');
-         topPosition = $el.position().top;
+		if (!el.hasClass('updating')) {
+			el.addClass('updating').text(alm_admin_localize.applying_layout + '...');
+			textarea.addClass('loading');
 
-         if (currentRowStart != topPosition) {
-            for (var currentDiv = 0; currentDiv < rowDivs.length; currentDiv++) {
-               rowDivs[currentDiv].height(currentTallest);
-            }
-            rowDivs.length = 0; // empty the array
-            currentRowStart = topPosition;
-            currentTallest = $el.height();
-            rowDivs.push($el);
-         } else {
-            rowDivs.push($el);
-            currentTallest = currentTallest < $el.height() ? $el.height() : currentTallest;
-         }
-         for (var currentDivs = 0; currentDivs < rowDivs.length; currentDivs++) {
-            rowDivs[currentDivs].height(currentTallest);
-         }
-      });
-   }
-   if ($('#alm-add-ons').length) {
-      var addOnColumns = $('#alm-add-ons .group .expand-wrap');
-      $(window).load(function () {
-         equalheight(addOnColumns);
-      });
-      $(window).resize(function () {
-         setTimeout(function () {
-            equalheight(addOnColumns);
-         }, 500);
-      });
-   }
+			// Get Codemirror Editor ID
+			var eid = '';
+			if (name === 'default') {
+				// Default Template
+				eid = window.editor_default;
+			} else {
+				// Repeater Templates
+				eid = window['editor_' + name];
+			}
+
+			// Get value from Ajax
+			$.ajax({
+				type: 'GET',
+				url: alm_admin_localize.ajax_admin_url,
+				data: {
+					action: 'alm_get_layout',
+					type: type,
+					custom: custom,
+					nonce: alm_admin_localize.alm_admin_nonce
+				},
+				dataType: 'JSON',
+				success: function success(data) {
+					eid.setValue(data.value);
+
+					// Clear button styles
+					setTimeout(function () {
+						el.text(alm_admin_localize.template_updated).blur();
+						setTimeout(function () {
+							el.removeClass('updating').html(layout_btn_text).blur(); // CLose drop menu
+							el.closest('.alm-drop-btn').trigger('click');
+							textarea.removeClass('loading');
+						}, 400);
+					}, 400);
+				},
+				error: function error(xhr, status, _error3) {
+					console.log(status);
+					textarea.removeClass('loading');
+				}
+			});
+		}
+	});
+
+	/**
+  * Dismiss Sharing (Transient).
+  *
+  * @since 2.8.7
+  */
+	$(document).on('click', '.alm-notification--dismiss', function (e) {
+		e.preventDefault();
+		var el = $(this),
+		    container = el.parent('.cta');
+
+		// Get value from Ajax
+		$.ajax({
+			type: 'POST',
+			url: alm_admin_localize.ajax_admin_url,
+			data: {
+				action: 'alm_dismiss_sharing',
+				nonce: alm_admin_localize.alm_admin_nonce
+			},
+			success: function success(data) {
+				container.fadeOut();
+			},
+			error: function error(xhr, status, _error4) {
+				console.log(status);
+			}
+		});
+	});
+
+	/**
+  * Set Transient (Transient).
+  *
+  * @since 4.0
+  */
+	$(document).on('click', '.alm-transient button.notice-dismiss', function (e) {
+		e.preventDefault();
+		var el = $(this),
+		    container = el.parent('.alm-transient'),
+		    transient_name = container.data('transient'),
+		    duration = container.data('duration');
+
+		// Get value from Ajax
+		$.ajax({
+			type: 'POST',
+			url: alm_admin_localize.ajax_admin_url,
+			data: {
+				action: 'alm_set_transient',
+				nonce: alm_admin_localize.alm_admin_nonce,
+				transient_name: transient_name,
+				duration: duration
+			},
+			success: function success(data) {
+				container.fadeOut();
+			},
+			error: function error(xhr, status, _error5) {
+				console.log(status);
+			}
+		});
+	});
+
+	/**
+  * Scroll to setting section.
+  *
+  * @since 2.7.3
+  */
+	$(document).on('change', '#alm-settings-nav', function (e) {
+		e.preventDefault();
+		var el = $(this),
+		    index = $('option:selected', el).index();
+		if (index !== '#') {
+			index = index - 1;
+			$('html, body').animate({
+				scrollTop: $('#alm_OptionsForm h2').eq(index).offset().top - 40
+			}, 500);
+		}
+	});
 });
